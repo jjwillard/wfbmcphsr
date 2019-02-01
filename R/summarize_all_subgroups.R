@@ -37,7 +37,7 @@ summarize_all_subgroups <- function(df, subgroups, mean_vars, grouping_var, digi
 
   grouping_var <- enquo(grouping_var)
 
-  sub <- map2_dfr(syms(subgroups), syms(mean_vars), quantify_means_of_subgroup, df = df,
+  sub <- purrr::map2_dfr(syms(subgroups), syms(mean_vars), quantify_means_of_subgroup, df = df,
                   grouping_var = !!grouping_var, digits = digits)
 
   invisible(sub)

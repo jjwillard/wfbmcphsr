@@ -21,7 +21,7 @@ summarize_all_numeric <- function(df, num_vars, grouping_var, digits = 1){
 
   grouping_var <- enquo(grouping_var)
 
-  res <- map_dfr(syms(num_vars), quantify_numeric, df = df,
+  res <- purrr::map_dfr(syms(num_vars), quantify_numeric, df = df,
                  grouping_var = !!grouping_var,
                  digits = digits)
   invisible(res)

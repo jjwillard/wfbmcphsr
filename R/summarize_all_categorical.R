@@ -34,12 +34,12 @@ summarize_all_categorical <- function(df, binary_cat_vars, multiple_cat_vars, gr
 
 
 
-  binary <- map_dfr(syms(binary_cat_vars), quantify_categorical, df = df,
+  binary <- purrr::map_dfr(syms(binary_cat_vars), quantify_categorical, df = df,
                     grouping_var = !!grouping_var,
                     type = 'binary', display = display, digits = digits)
 
 
-  multiple <- map_dfr(syms(multiple_cat_vars), quantify_categorical, df = df,
+  multiple <- purrr::map_dfr(syms(multiple_cat_vars), quantify_categorical, df = df,
                       grouping_var = !!grouping_var,
                       type = 'multiple', display = display, digits = digits)
 
