@@ -18,10 +18,11 @@
 #' @import tidyr
 #' @import rlang
 #' @import tibble
+#' @import purrr
 #' @return A data frame summarizing counts/proportions of categorical variable at each level of
 #'     grouping variable
 #' @examples \dontrun{
-#' quantify_categorical_edit(covariate = Edu_4cat, obpv_baseline, grouping_var = obpv_quintile,
+#' quantify_categorical(covariate = Edu_4cat, obpv_baseline, grouping_var = obpv_quintile,
 #' type = 'multiple', display = 'CP')
 #' }
 #'
@@ -93,7 +94,7 @@ quantify_categorical <- function(covariate, df, grouping_var, type = c('multiple
 
     #Add in column named 'var' which includes covariate name and levels
 
-    lev <- levels(as_vector(unique(fil_df[cov_name])))
+    lev <- levels(purrr::as_vector(unique(fil_df[cov_name])))
     var<- c(cov_name, lev)
     res2 <- cbind(var, results, stringsAsFactors = FALSE)
 
