@@ -13,6 +13,7 @@
 #' @param display How to display results: `CP` = counts and proportions, `C` = counts, `P` = proportions
 #'     (defaults to `CP`)
 #' @param digits Number of digits to round decimals
+#' @export
 #' @import dplyr
 #' @import tidyr
 #' @import rlang

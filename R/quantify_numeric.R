@@ -5,6 +5,7 @@
 #' @param df Dataset containing covariate
 #' @param grouping_var Variable to group by (will be columns of table)
 #' @param digits Number of digits to round decimals to
+#' @export
 #' @import dplyr
 #' @import tidyr
 #' @return A data frame summarizing mean/sd of covariate at each level of grouping variable
