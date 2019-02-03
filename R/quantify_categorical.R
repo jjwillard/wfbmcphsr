@@ -30,33 +30,36 @@
 quantify_categorical <- function(covariate, df, grouping_var, type = c('multiple', 'binary'),
                                  display = c('CP', 'C', 'P'), digits = 1){
 
-  grouping_var <- enquo(grouping_var)
-  covariate <- enquo(covariate)
-  cov_name <- quo_name(covariate)
+  grouping_var <- dplyr::enquo(grouping_var)
+  covariate <- dplyr::enquo(covariate)
+  cov_name <- dplyr::quo_name(covariate)
 
   fil_df <- df %>%
-    select(!!grouping_var, !!covariate) %>%
-    filter(!is.na(!!covariate))
+    dplyr::select(!!grouping_var, !!covariate) %>%
+    dplyr::filter(!is.na(!!covariate))
 
 
   var_counts <-  fil_df %>%
-    group_by(!!grouping_var, !!covariate) %>%
-    summarize(var_counts = n()) %>%
-    ungroup()
+    dplyr::group_by(!!grouping_var, !!covariate) %>%
+    dplyr::summarize(var_counts = n()) %>%
+    dplyr::ungroup()
 
-  num_levels <- df %>% filter(!is.na(!!covariate)) %>% group_by(!!covariate) %>% group_size() %>% length()
+  num_levels <- df %>% dplyr::filter(!is.na(!!covariate)) %>%
+    dplyr::group_by(!!covariate) %>%
+    dplyr::group_size() %>%
+    length()
 
   group_var_counts <-  fil_df %>%
-    group_by(!!grouping_var) %>%
-    group_size() %>%
+    dplyr::group_by(!!grouping_var) %>%
+    dplyr::group_size() %>%
     rep(each = num_levels) %>%
     as.data.frame() %>%
     rlang::set_names(nm = 'group_counts') %>%
-    as_tibble()
+    tibble::as_tibble()
 
   combined <- cbind(var_counts, group_var_counts)
 
-  results <- combined %>% mutate(props = 100 * var_counts / group_counts,
+  results <- combined %>% dplyr::mutate(props = 100 * var_counts / group_counts,
                                  res = paste0(var_counts,
                                               " (",
                                               format(round(props, digits), nsmall = digits),
@@ -65,29 +68,29 @@ quantify_categorical <- function(covariate, df, grouping_var, type = c('multiple
   if (toupper(display) == 'C'){
 
     results2 <- results %>%
-      select(!!grouping_var, !!covariate,  var_counts) %>%
-      spread(!!grouping_var, var_counts)
+      dplyr::select(!!grouping_var, !!covariate,  var_counts) %>%
+      tidyr::spread(!!grouping_var, var_counts)
   } else if (toupper(display) == 'P') {
 
     results2 <- results %>%
-      select(!!grouping_var, !!covariate,  props) %>%
-      mutate(props = paste0(format(round(props, digits), nsmall = digits))) %>%
-      spread(!!grouping_var, props)
+      dplyr::select(!!grouping_var, !!covariate,  props) %>%
+      dplyr::mutate(props = paste0(format(round(props, digits), nsmall = digits))) %>%
+      tidyr::spread(!!grouping_var, props)
 
   } else {
     results2 <- results %>%
-      select(!!grouping_var, !!covariate,  res) %>%
-      spread(!!grouping_var, res)
+      dplyr::select(!!grouping_var, !!covariate,  res) %>%
+      tidyr::spread(!!grouping_var, res)
   }
 
 
   if (type == 'multiple') {
 
     # Get rid of first column
-    results <- results2 %>% select(-!!covariate)
+    results <- results2 %>% dplyr::select(-!!covariate)
 
     #Add a row with blank strings
-    row_1 <- rep("", nrow(unique(fil_df[cov_name])))
+    row_1 <- ''
 
     #Combine them
     results <- rbind(row_1, results)
@@ -102,7 +105,7 @@ quantify_categorical <- function(covariate, df, grouping_var, type = c('multiple
 
   } else if (type == 'binary') {
 
-    results <- results2 %>% filter(!!covariate == 1) %>% select(-!!covariate)
+    results <- results2 %>% dplyr::filter(!!covariate == 1) %>% dplyr::select(-!!covariate)
 
     var <- as.character(cov_name)
     results <- cbind(var, results, stringsAsFactors = FALSE)

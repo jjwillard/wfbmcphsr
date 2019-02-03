@@ -22,38 +22,38 @@
 
 quantify_means_of_subgroup <- function(subgroup, mean_var, df, grouping_var, digits = 1){
 
-  mean_var <- enquo(mean_var)
-  subgroup <- enquo(subgroup)
-  grouping_var <- enquo(grouping_var)
-  sub_name <- quo_name(subgroup)
-  mean_name <- quo_name(mean_var)
+  mean_var <- dplyr::enquo(mean_var)
+  subgroup <- dplyr::enquo(subgroup)
+  grouping_var <- dplyr::enquo(grouping_var)
+  sub_name <- dplyr::quo_name(subgroup)
+  mean_name <- dplyr::quo_name(mean_var)
 
   fil_df <- df %>%
-    select(!!grouping_var, !!subgroup, !!mean_var) %>%
-    filter(!is.na(!!subgroup) & !is.na(!!mean_var))
+    dplyr::select(!!grouping_var, !!subgroup, !!mean_var) %>%
+    dplyr::filter(!is.na(!!subgroup) & !is.na(!!mean_var))
 
 
   calc <- fil_df %>%
-    group_by(!!grouping_var, !!subgroup) %>%
-    summarize(res = paste0(format(round(mean(!!mean_var), digits), nsmall = digits),
+    dplyr::group_by(!!grouping_var, !!subgroup) %>%
+    dplyr::summarize(res = paste0(format(round(mean(!!mean_var), digits), nsmall = digits),
                            " (",
                            format(round(sd(!!mean_var), digits), nsmall = digits),
                            ")")) %>%
-    spread(!!grouping_var, res)
+    tidyr::spread(!!grouping_var, res)
 
 
   # Get rid of first column
-  results <- calc  %>% select(-!!subgroup)
+  results <- calc  %>% dplyr::select(-!!subgroup)
 
   #Add a row with blank strings
-  row_1 <- rep("", nrow(unique(fil_df[sub_name])))
+  row_1 <- ''
 
 
   #Combine them
   results <- rbind(row_1, results)
 
   #Add in column named 'var' which includes covariate name and levels
-  lev <- levels(as_vector(unique(fil_df[sub_name])))
+  lev <- levels(purrr::as_vector(unique(fil_df[sub_name])))
   var <- c(paste0(sub_name, "[mean(", mean_name,")]"), lev)
   final_res <- cbind(var, results , stringsAsFactors = FALSE)
 

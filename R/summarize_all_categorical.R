@@ -30,7 +30,7 @@
 summarize_all_categorical <- function(df, binary_cat_vars, multiple_cat_vars, grouping_var,
                                       display = c('CP', 'C', 'P'), digits = 1){
 
-  grouping_var <- enquo(grouping_var)
+  grouping_var <- dplyr::enquo(grouping_var)
 
 
 

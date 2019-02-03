@@ -16,22 +16,22 @@
 
 quantify_numeric <- function(covariate, df, grouping_var, digits = 1){
 
-  grouping_var <- enquo(grouping_var)
-  covariate <- enquo(covariate)
-  cov_name <- quo_name(covariate)
+  grouping_var <- dplyr::enquo(grouping_var)
+  covariate <- dplyr::enquo(covariate)
+  cov_name <- dplyr::quo_name(covariate)
 
   fil_df <- df %>%
-    select(!!grouping_var, !!covariate) %>%
-    filter(!is.na(!!covariate))
+    dplyr::select(!!grouping_var, !!covariate) %>%
+    dplyr::filter(!is.na(!!covariate))
 
 
   res <- fil_df %>%
-    group_by(!!grouping_var) %>%
-    summarize(!!cov_name := paste0(format(round(mean(!!covariate), digits), nsmall = digits),
+    dplyr::group_by(!!grouping_var) %>%
+    dplyr::summarize(!!cov_name := paste0(format(round(mean(!!covariate), digits), nsmall = digits),
                                    " (",
                                    format(round(sd(!!covariate), digits), nsmall = digits),
                                    ")")) %>%
-    spread(!!grouping_var, !!cov_name)
+    tidyr::spread(!!grouping_var, !!cov_name)
 
 
   var <- cov_name
