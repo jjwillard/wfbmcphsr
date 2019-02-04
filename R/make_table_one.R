@@ -35,10 +35,10 @@
 
 
 
-make_table_one <- function(df, grouping_var, num_vars,
-                           binary_cat_vars, multiple_cat_vars, display = c('CP', 'C', 'P'),
-                           subgroups, mean_vars_for_subgroups,
-                           order_of_vars,
+make_table_one <- function(df, grouping_var, num_vars = NULL,
+                           binary_cat_vars = NULL, multiple_cat_vars = NULL, display = c('CP', 'C', 'P'),
+                           subgroups = NULL, mean_vars_for_subgroups = NULL,
+                           order_of_vars = NULL,
                            digits = 2){
 
   grouping_var <- dplyr::enquo(grouping_var)
@@ -55,26 +55,27 @@ make_table_one <- function(df, grouping_var, num_vars,
 
   tb1 <- rbind(all_nums, all_cats, subs)
 
+  if (is.null(order_of_vars)){
+    invisible(tb1)
+  } else {
 
-  new_table <- tibble::tibble()
-  var_order <- order_of_vars
+    new_table <- tibble::tibble()
+    var_order <- order_of_vars
 
-
-  for(i in 1:length(var_order)){
-    for (j in 1:nrow(tb1)){
-      if (stringr::str_split(tb1[j, 'var'], " ")[[1]][1] == var_order[i]){
-        new_table <- rbind(new_table, tb1[j, ])
-        while (!any(stringr::str_split(tb1[j + 1, 'var'], " ")[[1]][1] %in% var_order) & j < nrow(tb1)){
-          new_table <- rbind(new_table, tb1[j + 1, ])
-          j <- j + 1
+    for(i in 1:length(var_order)){
+      for (j in 1:nrow(tb1)){
+        if (stringr::str_split(tb1[j, 'var'], " ")[[1]][1] == var_order[i]){
+          new_table <- rbind(new_table, tb1[j, ])
+          while (!any(stringr::str_split(tb1[j + 1, 'var'], " ")[[1]][1] %in% var_order) & j < nrow(tb1)){
+            new_table <- rbind(new_table, tb1[j + 1, ])
+            j <- j + 1
+          }
         }
       }
     }
+
+    tb1 <- tibble::remove_rownames(new_table)
+
+    invisible(tb1)
   }
-
-  tb1 <- tibble::remove_rownames(new_table)
-
-
-
-  invisible(tb1)
 }

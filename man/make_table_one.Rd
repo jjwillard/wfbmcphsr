@@ -4,9 +4,10 @@
 \alias{make_table_one}
 \title{Make Table One}
 \usage{
-make_table_one(df, grouping_var, num_vars, binary_cat_vars,
-  multiple_cat_vars, display = c("CP", "C", "P"), subgroups,
-  mean_vars_for_subgroups, order_of_vars, digits = 2)
+make_table_one(df, grouping_var, num_vars = NULL,
+  binary_cat_vars = NULL, multiple_cat_vars = NULL, display = c("CP",
+  "C", "P"), subgroups = NULL, mean_vars_for_subgroups = NULL,
+  order_of_vars = NULL, digits = 2)
 }
 \arguments{
 \item{df}{Dataset containing covariates}
