@@ -35,7 +35,7 @@ This function allows you to calculate counts, proportions, or a combination of b
 }
 \examples{
 \dontrun{
-quantify_categorical_edit(covariate = Edu_4cat, obpv_baseline, grouping_var = obpv_quintile,
+quantify_categorical(covariate = Edu_4cat, obpv_baseline, grouping_var = obpv_quintile,
 type = 'multiple', display = 'CP')
 }
 

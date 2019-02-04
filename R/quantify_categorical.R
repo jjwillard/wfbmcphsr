@@ -16,7 +16,6 @@
 #' @export
 #' @import dplyr
 #' @import tidyr
-#' @import rlang
 #' @import tibble
 #' @import purrr
 #' @return A data frame summarizing counts/proportions of categorical variable at each level of
@@ -54,7 +53,7 @@ quantify_categorical <- function(covariate, df, grouping_var, type = c('multiple
     dplyr::group_size() %>%
     rep(each = num_levels) %>%
     as.data.frame() %>%
-    rlang::set_names(nm = 'group_counts') %>%
+    purrr::set_names(nm = 'group_counts') %>%
     tibble::as_tibble()
 
   combined <- cbind(var_counts, group_var_counts)
