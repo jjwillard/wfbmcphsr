@@ -54,7 +54,7 @@ quantify_means_of_subgroup <- function(subgroup, mean_var, df, grouping_var, dig
 
   #Add in column named 'var' which includes covariate name and levels
   lev <- levels(purrr::as_vector(unique(fil_df[sub_name])))
-  var <- c(paste0(sub_name, "[mean(", mean_name,")]"), lev)
+  var <- c(paste0(sub_name, " [mean(", mean_name,")]"), lev)
   final_res <- cbind(var, results , stringsAsFactors = FALSE)
 
 
