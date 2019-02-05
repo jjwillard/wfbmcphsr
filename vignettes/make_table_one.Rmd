@@ -110,5 +110,5 @@ In the future, I hope to add the following:
 - Count and proportion calculations for subgroups (currently only supports mean/sd calculation)
 - Anything else you think might be convenient to have (email me!)
 
-## Thanks for using `make_table_one`!!
+## Thanks for using `make_table_one`!
 
