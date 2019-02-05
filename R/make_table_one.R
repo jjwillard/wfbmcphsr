@@ -19,10 +19,13 @@
 #'     position of corresponding subgroup variable)
 #' @param order_of_vars A vector of all variables listed in the order of the rows you desire for your
 #'     Table One.
+#' @param export_rtf Logical. Do you want to export an RTF to location specified in `rtf_filename`?
+#' @param rtf_filename Must be quoted and include `.rtf` extension (See example)
 #' @param digits Number of digits to round decimals
 #' @export
 #' @import dplyr
 #' @import purrr
+#' @import rtf
 #' @import stringr
 #' @import tibble
 #' @import tidyr
@@ -30,8 +33,10 @@
 #' @examples \dontrun{
 #' make_table_one(df = obpv_baseline, grouping_var = obpv_quintile, num_vars = num_vars,
 #' binary_cat_vars = binary_cat_vars, multiple_cat_vars = multiple_cat_vars, display = 'CP',
-#' subgroups = subgroups, mean_vars_for_subgroups = mean_vars, order_of_vars = var_order, digits = 2)
+#' subgroups = subgroups, mean_vars_for_subgroups = mean_vars, order_of_vars = var_order,
+#' export_rtf = TRUE, rtf_filename = 'my_location/my_filename.rtf', digits = 2)
 #' }
+
 
 
 
@@ -39,6 +44,7 @@ make_table_one <- function(df, grouping_var, num_vars = NULL,
                            binary_cat_vars = NULL, multiple_cat_vars = NULL, display = c('CP', 'C', 'P'),
                            subgroups = NULL, mean_vars_for_subgroups = NULL,
                            order_of_vars = NULL,
+                           export_rtf = FALSE, rtf_filename = NULL,
                            digits = 2){
 
   grouping_var <- dplyr::enquo(grouping_var)
@@ -57,6 +63,16 @@ make_table_one <- function(df, grouping_var, num_vars = NULL,
 
   if (is.null(order_of_vars)){
     invisible(tb1)
+
+    if (export_rtf == TRUE & !is.null(rtf_filename)){
+
+      rtf_table1 <- rtf::RTF(rtf_filename)
+      rtf::addTable(rtf_table1, tb1)
+      rtf::done(rtf_table1)
+
+      invisible(tb1)
+
+    }
   } else {
 
     new_table <- tibble::tibble()
@@ -74,8 +90,19 @@ make_table_one <- function(df, grouping_var, num_vars = NULL,
       }
     }
 
-    tb1 <- tibble::remove_rownames(new_table)
+    tb1_sorted <- tibble::remove_rownames(new_table)
 
-    invisible(tb1)
+    invisible(tb1_sorted)
+
+    if (export_rtf == TRUE & !is.null(rtf_filename)){
+
+      rtf_table1 <- rtf::RTF(rtf_filename)
+      rtf::addTable(rtf_table1, tb1_sorted)
+      rtf::done(rtf_table1)
+
+      invisible(tb1_sorted)
+    }
   }
+
 }
+
