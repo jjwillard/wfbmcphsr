@@ -10,8 +10,8 @@
 #' @param digits Number of digits to round decimals
 #' @export
 #' @import dplyr
-#' @import tidyr
-#' @import purrr
+#' @importFrom tidyr spread
+#' @importFrom purrr as_vector
 #' @return A data frame summarizing mean and sd of a numeric variable by grouping and specific subgroup
 #'     variable levels
 #' @examples \dontrun{

@@ -7,7 +7,7 @@
 #' @param digits Number of digits to round decimals to
 #' @export
 #' @import dplyr
-#' @import tidyr
+#' @importFrom tidyr spread
 #' @return A data frame summarizing mean/sd of covariate at each level of grouping variable
 #' @examples \dontrun{
 #' quantify_numeric(covariate = age, df = obpv_baseline, grouping_var = obpv_quintile, digits = 1)

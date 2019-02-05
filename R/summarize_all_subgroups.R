@@ -12,8 +12,7 @@
 #' @param digits Number of digits to round decimals
 #' @export
 #' @import dplyr
-#' @import tidyr
-#' @import purrr
+#' @importFrom purrr map2_dfr
 #' @return A data frame summarizing mean and sd of a numeric variable by grouping and all subgroup
 #'     variables of interest
 #' @examples \dontrun{

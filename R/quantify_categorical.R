@@ -15,9 +15,9 @@
 #' @param digits Number of digits to round decimals
 #' @export
 #' @import dplyr
-#' @import tidyr
-#' @import tibble
-#' @import purrr
+#' @importFrom tidyr spread
+#' @importFrom tibble as_tibble
+#' @importFrom purrr set_names as_vector
 #' @return A data frame summarizing counts/proportions of categorical variable at each level of
 #'     grouping variable
 #' @examples \dontrun{

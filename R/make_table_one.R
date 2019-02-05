@@ -24,11 +24,9 @@
 #' @param digits Number of digits to round decimals
 #' @export
 #' @import dplyr
-#' @import purrr
-#' @import rtf
-#' @import stringr
-#' @import tibble
-#' @import tidyr
+#' @importFrom rtf RTF addTable done
+#' @importFrom stringr str_split
+#' @importFrom tibble tibble remove_rownames
 #' @return A sorted Table One including numeric, categorical and subgroup variables
 #' @examples \dontrun{
 #' make_table_one(df = obpv_baseline, grouping_var = obpv_quintile, num_vars = num_vars,

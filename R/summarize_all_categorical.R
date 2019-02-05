@@ -17,8 +17,7 @@
 #' @param digits Number of digits to round decimals
 #' @export
 #' @import dplyr
-#' @import tidyr
-#' @import purrr
+#' @importFrom purrr map_dfr
 #' @return A data frame summarizing mean/sd of covariate at each level of grouping variable
 #' @examples \dontrun{
 #' summarize_all_categorical(df = obpv_baseline, binary_cat_vars = binary_cat_vars,

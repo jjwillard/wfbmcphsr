@@ -7,7 +7,8 @@
 make_table_one(df, grouping_var, num_vars = NULL,
   binary_cat_vars = NULL, multiple_cat_vars = NULL, display = c("CP",
   "C", "P"), subgroups = NULL, mean_vars_for_subgroups = NULL,
-  order_of_vars = NULL, digits = 2)
+  order_of_vars = NULL, export_rtf = FALSE, rtf_filename = NULL,
+  digits = 2)
 }
 \arguments{
 \item{df}{Dataset containing covariates}
@@ -36,6 +37,10 @@ position of corresponding subgroup variable)}
 \item{order_of_vars}{A vector of all variables listed in the order of the rows you desire for your
 Table One.}
 
+\item{export_rtf}{Logical. Do you want to export an RTF to location specified in `rtf_filename`?}
+
+\item{rtf_filename}{Must be quoted and include `.rtf` extension (See example)}
+
 \item{digits}{Number of digits to round decimals}
 }
 \value{
@@ -49,6 +54,7 @@ This function allows you to make a Table One for manuscript publication in the
 \dontrun{
 make_table_one(df = obpv_baseline, grouping_var = obpv_quintile, num_vars = num_vars,
 binary_cat_vars = binary_cat_vars, multiple_cat_vars = multiple_cat_vars, display = 'CP',
-subgroups = subgroups, mean_vars_for_subgroups = mean_vars, order_of_vars = var_order, digits = 2)
+subgroups = subgroups, mean_vars_for_subgroups = mean_vars, order_of_vars = var_order,
+export_rtf = TRUE, rtf_filename = 'my_location/my_filename.rtf', digits = 2)
 }
 }
