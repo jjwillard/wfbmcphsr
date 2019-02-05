@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="James Willard" />
+
+<meta name="date" content="2019-02-05" />
+
+<title>Introduction to make_table_one</title>
+
+
+
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Introduction to make_table_one</h1>
+<h4 class="author"><em>James Willard</em></h4>
+<h4 class="date"><em>2019-02-05</em></h4>
+
+
+
+<p>In health science research, producing tables of baseline characteristics (commonly called Table 1) of patient cohorts is a routine procedure. Much of the analysis-specific data cleaning work is required in the steps leading up to table formation, but without a streamlined process for manipulating and organizing values of resulting calculations, considerable time can be spent pasting results together. The <code>make_table_one</code> function attempts to make this calculation, manipulation, and organization of summary values as streamlined as possible.</p>
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<p>Pre-function data cleaning:</p>
+<ul>
+<li>Import your data</li>
+<li>Clean appropriately (for binary variables, give 0-1 values as results will show the summary values of level 1 only)</li>
+<li>Create vectors of names for numeric variables, binary variables, multiple level categorical variables, and two vectors corresponding to subgroups of interest and the type of mean you wish to calculate for each subgroup</li>
+<li>Make all categorical variables factors (this includes binary, multiple level categorical and subgroups)</li>
+<li>Finally, create a vector containing the order of variables as you wish them to be displayed in your final table</li>
+</ul>
+<p>Using <code>make_table_one</code>:</p>
+<ul>
+<li>Substitute in named vectors in appropriate spots in the <code>make_table_one</code> function</li>
+<li>Results are returned invisibly so you should save them as an object to view them</li>
+<li>There is also an option to export the sorted data table as an RTF for further editing/formatting</li>
+</ul>
+</div>
+<div id="the-function-make_table_one" class="section level2">
+<h2>The function <code>make_table_one</code></h2>
+<div id="usage" class="section level3">
+<h3>Usage</h3>
+<pre><code>make_table_one(df, grouping_var, num_vars = NULL,
+  binary_cat_vars = NULL, multiple_cat_vars = NULL, display = c(&quot;CP&quot;,&quot;C&quot;, &quot;P&quot;), subgroups = NULL,
+  mean_vars_for_subgroups = NULL, order_of_vars = NULL, export_rtf = FALSE, rtf_filename = NULL,
+  digits = 2)</code></pre>
+</div>
+<div id="parameters" class="section level3">
+<h3>Parameters</h3>
+<ul>
+<li><code>df</code>: Dataset containing covariates</li>
+<li><code>grouping_var</code>: Variable to group by (will be columns of table)</li>
+<li><code>num_vars</code>: Vector of numeric variables</li>
+<li><code>binary_cat_vars</code>: Vector of binary variables (in 0-1 format)</li>
+<li><code>multiple_cat_vars</code>: Vector of multiple level categorical variables</li>
+<li><code>display</code>: How to display categorical results: ‘CP’ = counts and proportions, ‘C’ = counts, ‘P’ = proportions (defaults to ‘CP’)</li>
+<li><code>subgroups</code>: Vector of subgroup variables of interest (must be factors). NOTE: If you plan to analyze a categorical variable by itself and then also use it for subgroup analysis, it is advised to copy and rename the columns of the categorical variables you wish to use as subgroups (ie. rename variable to something like ’variable_sub“) so Table One can be properly sorted to reflect your specification in ‘order_of_vars’. If the subgroup does not have a unique name, it will be sorted directly below the categorical variable.</li>
+<li><code>mean_vars_for_subgroups</code>: Vector of numeric variables from which to calculate mean and sd (must match vector position of corresponding subgroup variable)</li>
+<li><code>order_of_vars</code>: A vector of all variables listed in the order of the rows you desire for your Table One.</li>
+<li><code>export_rtf</code>: Logical. Do you want to export an RTF to location specified in ‘rtf_filename’? (Defaults to <code>FALSE</code>)</li>
+<li><code>rtf_filename</code>: Must be quoted and include ‘.rtf’ extension</li>
+<li><code>digits</code>: Number of digits to round decimals</li>
+</ul>
+</div>
+</div>
+<div id="pre-function-data-cleaning" class="section level2">
+<h2>Pre-function data cleaning</h2>
+<p>Once you have imported your data, clean it appropriately:</p>
+<pre><code>baseline &lt;- read_sas(&quot;my_sas_file.sas7bdat&quot;)
+
+my_cleaned_baseline &lt;- baseline %&gt;%
+  mutate(var1 = if_else(ex_var1, 0, 1),
+     var2 = if_else(ex_var1, 0, 1),
+     var3 = if_else(ex_var3 == 1, 1, 0)) %&gt;%
+  select(grouping_var, some_vector_of_other_variables)
+  </code></pre>
+<p>Now make vectors of the names of your different types of variables. NOTE: If you plan to analyze a categorical variable by itself and then also use it for subgroup analysis, it is advised to copy and rename the columns of the categorical variables you wish to use as subgroups (ie. rename variable to something like ’variable_sub“) so <code>make_table_one</code> can be properly sorted to reflect your specification in ‘order_of_vars’. If the subgroup does not have a unique name, it will be sorted directly below the categorical variable.</p>
+<pre><code>num_vars &lt;- c('num_var1', 'numvar2', ...)
+binary_cat_vars &lt;- c('bin_var1', 'bin_var2', ...)
+multiple_cat_vars &lt;- c('mc_var1', 'mc_var2', ...)
+
+subgroups &lt;- c('subgroup1', subgroup2', ...)
+mean_vars &lt;- c('calulate_mean_of_this_for_subgroup1', 'calulate_mean_of_this_for_subgroup2', ...)</code></pre>
+<p>Convert your categorical variables into factors (very important):</p>
+<pre><code>my_cleaned_baseline[binary_cat_vars] &lt;- lapply(my_cleaned_baseline[binary_cat_vars], factor)
+my_cleaned_baseline[multiple_cat_vars] &lt;- lapply(my_cleaned_baseline[multiple_cat_vars], factor)
+my_cleaned_baseline[subgroups] &lt;- lapply(my_cleaned_baseline[subgroups], factor)</code></pre>
+<p>Create a vector containing the order of variables as you wish them to be displayed in your final table:</p>
+<pre><code>var_order &lt;- c('var_for_first_row', 'var_for_second_row', ...)</code></pre>
+</div>
+<div id="calling-make_table_one" class="section level2">
+<h2>Calling <code>make_table_one</code></h2>
+<p>Once you have your data cleaned and vectors of variable names as above, substitute into <code>make_table_one</code> and save as an object for viewing within R.</p>
+<pre><code>table_1 &lt;- make_table_one(df = my_cleaned_baseline, grouping_var = random_assignment_group, num_vars = num_vars,
+  binary_cat_vars = binary_cat_vars, multiple_cat_vars = multiple_cat_vars, display = 'CP',
+  subgroups = subgroups, mean_vars_for_subgroups = mean_vars, order_of_vars = var_order,
+  export_rtf = TRUE, rtf_filename = 'my_location/my_filename.rtf', digits = 2)</code></pre>
+<p>Notice that <code>export_rtf = TRUE</code> so an RTF will be generated at the location specified in <code>rtf_filename = 'my_location/my_filename.rtf'</code>.</p>
+</div>
+<div id="future-work" class="section level2">
+<h2>Future Work</h2>
+<p>In the future, I hope to add the following:</p>
+<ul>
+<li>Error handling to deal with common issues</li>
+<li>A simulated baseline dataset to play with in the package and to display real examples in the vignette</li>
+<li>Chi-square/Fisher’s Exact Test/T-test/ANOVA p-values to test for differences between levels of grouping_var</li>
+<li>Different display options for mean/sd</li>
+<li>Count and proportion calculations for subgroups (currently only supports mean/sd calculation)</li>
+<li>Anything else you think might be convenient to have (email me!)</li>
+</ul>
+</div>
+<div id="thanks-for-using-make_table_one" class="section level2">
+<h2>Thanks for using <code>make_table_one</code>!!</h2>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
