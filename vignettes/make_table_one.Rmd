@@ -1,0 +1,114 @@
+---
+title: "Introduction to make_table_one"
+author: "James Willard"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+In health science research, producing tables of baseline characteristics (commonly called Table 1) of patient cohorts is a routine procedure.  Much of the analysis-specific data cleaning work is required in the steps leading up to table formation, but without a streamlined process for manipulating and organizing values of resulting calculations, considerable time can be spent pasting results together.  The `make_table_one` function attempts to make this calculation, manipulation, and organization of summary values as streamlined as possible.
+
+## Overview
+
+Pre-function data cleaning:
+
+- Import your data
+- Clean appropriately (for binary variables, give 0-1 values as results will show the summary values of level 1 only)
+- Create vectors of names for numeric variables, binary variables, multiple level categorical variables, and two vectors corresponding to subgroups of interest and the type of mean you wish to calculate for each subgroup
+- Make all categorical variables factors (this includes binary, multiple level categorical and subgroups)
+- Finally, create a vector containing the order of variables as you wish them to be displayed in your final table
+
+Using `make_table_one`:
+
+- Substitute in named vectors in appropriate spots in the `make_table_one` function
+- Results are returned invisibly so you should save them as an object to view them
+- There is also an option to export the sorted data table as an RTF for further editing/formatting
+
+## The function `make_table_one`
+### Usage
+
+    make_table_one(df, grouping_var, num_vars = NULL,
+      binary_cat_vars = NULL, multiple_cat_vars = NULL, display = c("CP","C", "P"), subgroups = NULL,
+      mean_vars_for_subgroups = NULL, order_of_vars = NULL, export_rtf = FALSE, rtf_filename = NULL,
+      digits = 2)
+
+### Parameters
+
+- `df`: Dataset containing covariates
+- `grouping_var`: Variable to group by (will be columns of table)
+- `num_vars`: Vector of numeric variables
+- `binary_cat_vars`: Vector of binary variables (in 0-1 format)
+- `multiple_cat_vars`: Vector of multiple level categorical variables
+- `display`: How to display categorical results: 'CP' = counts and proportions, 'C' = counts, 'P' = proportions (defaults to 'CP')
+- `subgroups`: Vector of subgroup variables of interest (must be factors). NOTE: If you plan to analyze a categorical variable by itself and then also use it for subgroup analysis, it is advised to copy and rename the columns of the categorical variables you wish to use as subgroups (ie. rename variable to something like 'variable_sub") so Table One can be properly sorted to reflect your specification in 'order_of_vars'. If the subgroup does not have a unique name, it will be sorted directly below the categorical variable.
+- `mean_vars_for_subgroups`: Vector of numeric variables from which to calculate mean and sd (must match vector position of corresponding subgroup variable)
+- `order_of_vars`: A vector of all variables listed in the order of the rows you desire for your Table One.
+- `export_rtf`: Logical. Do you want to export an RTF to location specified in 'rtf_filename'? (Defaults to `FALSE`)
+- `rtf_filename`: Must be quoted and include '.rtf' extension 
+- `digits`: Number of digits to round decimals
+
+## Pre-function data cleaning
+
+Once you have imported your data, clean it appropriately: 
+
+    baseline <- read_sas("my_sas_file.sas7bdat")
+    
+    my_cleaned_baseline <- baseline %>%
+      mutate(var1 = if_else(ex_var1, 0, 1),
+         var2 = if_else(ex_var1, 0, 1),
+         var3 = if_else(ex_var3 == 1, 1, 0)) %>%
+      select(grouping_var, some_vector_of_other_variables)
+      
+Now make vectors of the names of your different types of variables. NOTE: If you plan to analyze a categorical variable by itself and then also use it for subgroup analysis, it is advised to copy and rename the columns of the categorical variables you wish to use as subgroups (ie. rename variable to something like 'variable_sub") so `make_table_one` can be properly sorted to reflect your specification in 'order_of_vars'. If the subgroup does not have a unique name, it will be sorted directly below the categorical variable. 
+
+    num_vars <- c('num_var1', 'numvar2', ...)
+    binary_cat_vars <- c('bin_var1', 'bin_var2', ...)
+    multiple_cat_vars <- c('mc_var1', 'mc_var2', ...)
+    
+    subgroups <- c('subgroup1', subgroup2', ...)
+    mean_vars <- c('calulate_mean_of_this_for_subgroup1', 'calulate_mean_of_this_for_subgroup2', ...)
+    
+Convert your categorical variables into factors (very important):
+
+    my_cleaned_baseline[binary_cat_vars] <- lapply(my_cleaned_baseline[binary_cat_vars], factor)
+    my_cleaned_baseline[multiple_cat_vars] <- lapply(my_cleaned_baseline[multiple_cat_vars], factor)
+    my_cleaned_baseline[subgroups] <- lapply(my_cleaned_baseline[subgroups], factor)
+    
+Create a vector containing the order of variables as you wish them to be displayed in your final table:
+
+    var_order <- c('var_for_first_row', 'var_for_second_row', ...)
+
+## Calling `make_table_one`
+
+Once you have your data cleaned and vectors of variable names as above, substitute into `make_table_one` and save as an object for viewing within R.
+
+    table_1 <- make_table_one(df = my_cleaned_baseline, grouping_var = random_assignment_group, num_vars = num_vars,
+      binary_cat_vars = binary_cat_vars, multiple_cat_vars = multiple_cat_vars, display = 'CP',
+      subgroups = subgroups, mean_vars_for_subgroups = mean_vars, order_of_vars = var_order,
+      export_rtf = TRUE, rtf_filename = 'my_location/my_filename.rtf', digits = 2)
+
+Notice that `export_rtf = TRUE` so an RTF will be generated at the location specified in `rtf_filename = 'my_location/my_filename.rtf'`.
+
+## Future Work
+
+In the future, I hope to add the following:
+
+- Error handling to deal with common issues
+- A simulated baseline dataset to play with in the package and to display real examples in the vignette
+- Chi-square/Fisher's Exact Test/T-test/ANOVA p-values to test for differences between levels of grouping_var
+- Different display options for mean/sd
+- Count and proportion calculations for subgroups (currently only supports mean/sd calculation)
+- Anything else you think might be convenient to have (email me!)
+
+## Thanks for using `make_table_one`!
+
