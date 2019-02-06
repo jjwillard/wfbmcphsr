@@ -60,7 +60,7 @@ make_table_one <- function(df, grouping_var, num_vars = NULL,
   tb1 <- rbind(all_nums, all_cats, subs)
 
   if (is.null(order_of_vars)){
-    invisible(tb1)
+
 
     if (export_rtf == TRUE & !is.null(rtf_filename)){
 
@@ -70,7 +70,12 @@ make_table_one <- function(df, grouping_var, num_vars = NULL,
 
       invisible(tb1)
 
+    } else{
+
+      invisible(tb1)
+
     }
+
   } else {
 
     new_table <- tibble::tibble()
@@ -90,8 +95,6 @@ make_table_one <- function(df, grouping_var, num_vars = NULL,
 
     tb1_sorted <- tibble::remove_rownames(new_table)
 
-    invisible(tb1_sorted)
-
     if (export_rtf == TRUE & !is.null(rtf_filename)){
 
       rtf_table1 <- rtf::RTF(rtf_filename)
@@ -99,6 +102,10 @@ make_table_one <- function(df, grouping_var, num_vars = NULL,
       rtf::done(rtf_table1)
 
       invisible(tb1_sorted)
+    } else{
+
+      invisible(tb1_sorted)
+
     }
   }
 
