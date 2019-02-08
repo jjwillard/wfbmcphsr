@@ -6,8 +6,10 @@ Author: James Willard
 Maintainer: James Willard <jwillard2@wakehealth.edu>
 Description: Contains useful functions for analysis at WFBMC PHS 
 Imports:
+    broom (>= 0.5.1),
     dplyr (>= 0.8.0),
     purrr (>= 0.3.0),
+    rlang (>= 0.3.1),
     rtf (>= 0.4-13),
     stringr (>= 1.3.1),
     tibble (>= 2.0.1),

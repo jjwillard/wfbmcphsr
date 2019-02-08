@@ -14,7 +14,8 @@ quantify_categorical(covariate, df, grouping_var, type = c("multiple",
 
 \item{grouping_var}{Variable to group by (will be columns of table)}
 
-\item{type}{Type of categorical variable: `binary` or `multiple`}
+\item{type}{Type of categorical variable: `binary` or `multiple` (Note: If you would like to see both levels of
+a binary variable in the output, then specify `multiple`).}
 
 \item{display}{How to display results: `CP` = counts and proportions, `C` = counts, `P` = proportions
 (defaults to `CP`)}

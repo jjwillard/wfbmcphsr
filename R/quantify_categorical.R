@@ -9,12 +9,15 @@
 #' @param covariate Categorical variable of interest
 #' @param df Dataset containing covariate
 #' @param grouping_var Variable to group by (will be columns of table)
-#' @param type Type of categorical variable: `binary` or `multiple`
+#' @param type Type of categorical variable: `binary` or `multiple` (Note: If you would like to see both levels of
+#'     a binary variable in the output, then specify `multiple`).
 #' @param display How to display results: `CP` = counts and proportions, `C` = counts, `P` = proportions
 #'     (defaults to `CP`)
 #' @param digits Number of digits to round decimals
 #' @export
 #' @import dplyr
+#' @importFrom rlang eval_tidy expr warn
+#' @importFrom stats chisq.test
 #' @importFrom tidyr spread
 #' @importFrom tibble as_tibble
 #' @importFrom purrr set_names as_vector
@@ -33,10 +36,36 @@ quantify_categorical <- function(covariate, df, grouping_var, type = c('multiple
   covariate <- dplyr::enquo(covariate)
   cov_name <- dplyr::quo_name(covariate)
 
+  # Filter out NA's, produce warning
+
   fil_df <- df %>%
     dplyr::select(!!grouping_var, !!covariate) %>%
     dplyr::filter(!is.na(!!covariate))
 
+
+  num_na <- nrow(df) - nrow(fil_df)
+
+  if(num_na > 0){
+    rlang::warn(paste0("There were ", num_na, " NA's removed for ", rlang::eval_tidy(rlang::expr(!!cov_name))))
+  }
+
+  # Get p-value from Chi-square test
+  pval <- rlang::eval_tidy(
+
+    rlang::expr(stats::chisq.test(!!covariate, as.factor(!!grouping_var), correct = FALSE)$'p.value'),
+
+    data = fil_df)
+
+
+  # Create * flag for p-values < 0.05 and say name of test
+
+  significance <- dplyr::if_else(pval < 0.05, '*', '')
+  test <- 'Chi-square Test'
+  p_value <- format.pval(pval, digits = 2, eps = 0.001, nsmall = 3)
+  pv <- cbind(p_value, significance, test)
+
+
+  # Get counts and proportions
 
   var_counts <-  fil_df %>%
     dplyr::group_by(!!grouping_var, !!covariate) %>%
@@ -59,10 +88,12 @@ quantify_categorical <- function(covariate, df, grouping_var, type = c('multiple
   combined <- cbind(var_counts, group_var_counts)
 
   results <- combined %>% dplyr::mutate(props = 100 * var_counts / group_counts,
-                                 res = paste0(var_counts,
-                                              " (",
-                                              format(round(props, digits), nsmall = digits),
-                                              ")"))
+                                        res = paste0(var_counts,
+                                                     " (",
+                                                     format(round(props, digits), nsmall = digits),
+                                                     ")"))
+
+  # How should the results be displayed?
 
   if (toupper(display) == 'C'){
 
@@ -82,6 +113,7 @@ quantify_categorical <- function(covariate, df, grouping_var, type = c('multiple
       tidyr::spread(!!grouping_var, res)
   }
 
+  # What kind of variable is this?
 
   if (type == 'multiple') {
 
@@ -98,7 +130,10 @@ quantify_categorical <- function(covariate, df, grouping_var, type = c('multiple
 
     lev <- levels(purrr::as_vector(unique(fil_df[cov_name])))
     var<- c(cov_name, lev)
-    res2 <- cbind(var, results, stringsAsFactors = FALSE)
+    blanks <- matrix(data = '', nrow = length(lev), ncol = length(pv))
+    new_pv <- rbind(pv, blanks)
+
+    res2 <- cbind(var, results, new_pv, stringsAsFactors = FALSE)
 
     invisible(res2)
 
@@ -107,10 +142,11 @@ quantify_categorical <- function(covariate, df, grouping_var, type = c('multiple
     results <- results2 %>% dplyr::filter(!!covariate == 1) %>% dplyr::select(-!!covariate)
 
     var <- as.character(cov_name)
-    results <- cbind(var, results, stringsAsFactors = FALSE)
+    results <- cbind(var, results, pv, stringsAsFactors = FALSE)
 
     invisible(results)
   }
 
 
 }
+

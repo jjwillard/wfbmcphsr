@@ -103,9 +103,8 @@ Notice that `export_rtf = TRUE` so an RTF will be generated at the location spec
 
 In the future, I hope to add the following:
 
-- Error handling to deal with common issues
+- More error handling to deal with common type issues
 - A simulated baseline dataset to play with in the package and to display real examples in the vignette
-- Chi-square/Fisher's Exact Test/T-test/ANOVA p-values to test for differences between levels of grouping_var
 - Different display options for mean/sd
 - Count and proportion calculations for subgroups (currently only supports mean/sd calculation)
 - Anything else you think might be convenient to have (email me!)
