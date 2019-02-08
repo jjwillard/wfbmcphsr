@@ -4,11 +4,12 @@
 #' @param covariate Numeric variable of interest
 #' @param df Dataset containing covariate
 #' @param grouping_var Variable to group by (will be columns of table)
+#' @param num_display How should results be displayed? ('PM' for mean +- sd, 'PRS' for mean (sd))
 #' @param show_pval Logical.  Should the p-value results be displayed?
 #' @param digits Number of digits to round decimals to
 #' @export
 #' @import dplyr
-#' @importFrom rlang eval_tidy expr warn
+#' @importFrom rlang abort eval_tidy expr warn
 #' @importFrom stats anova lm
 #' @importFrom tidyr spread
 #' @return A data frame summarizing mean/sd of covariate at each level of grouping variable
@@ -19,7 +20,7 @@
 
 
 
-quantify_numeric <- function(covariate, df, grouping_var, show_pval = TRUE, digits = 1){
+quantify_numeric <- function(covariate, df, grouping_var, num_display = 'PM', show_pval = TRUE, digits = 1){
 
   grouping_var <- dplyr::enquo(grouping_var)
   covariate <- dplyr::enquo(covariate)
@@ -54,13 +55,24 @@ quantify_numeric <- function(covariate, df, grouping_var, show_pval = TRUE, digi
 
   # Calculate mean and sd
 
-  res <- fil_df %>%
-    dplyr::group_by(!!grouping_var) %>%
-    dplyr::summarize(!!cov_name := paste0(format(round(mean(!!covariate), digits), nsmall = digits),
-                                          " (",
-                                          format(round(sd(!!covariate), digits), nsmall = digits),
-                                          ")")) %>%
-    tidyr::spread(!!grouping_var, !!cov_name)
+  if (toupper(num_display) == 'PM' | is.null(num_display)){
+    res <- fil_df %>%
+      dplyr::group_by(!!grouping_var) %>%
+      dplyr::summarize(!!cov_name := paste0(format(round(mean(!!covariate), digits), nsmall = digits),
+                                            " \u00B1 ",
+                                            format(round(sd(!!covariate), digits), nsmall = digits))) %>%
+      tidyr::spread(!!grouping_var, !!cov_name)
+  } else if(toupper(num_display) == 'PRS') {
+    res <- fil_df %>%
+      dplyr::group_by(!!grouping_var) %>%
+      dplyr::summarize(!!cov_name := paste0(format(round(mean(!!covariate), digits), nsmall = digits),
+                                            " (",
+                                            format(round(sd(!!covariate), digits), nsmall = digits),
+                                            ")")) %>%
+      tidyr::spread(!!grouping_var, !!cov_name)
+  } else {
+   rlang::abort('Incorrect specification for numeric display.')
+  }
 
   # Combine results
 
@@ -73,3 +85,4 @@ quantify_numeric <- function(covariate, df, grouping_var, show_pval = TRUE, digi
   }
   invisible(res)
 }
+

@@ -5,8 +5,7 @@
 \title{Quantify Categorical Variable}
 \usage{
 quantify_categorical(covariate, df, grouping_var, type = c("multiple",
-  "binary"), display = c("CP", "C", "P"), show_pval = TRUE,
-  digits = 1)
+  "binary"), display = "CP", show_pval = TRUE, digits = 1)
 }
 \arguments{
 \item{covariate}{Categorical variable of interest}

@@ -4,11 +4,12 @@
 \alias{make_table_one}
 \title{Make Table One}
 \usage{
-make_table_one(df, grouping_var, num_vars = NULL,
-  binary_cat_vars = NULL, multiple_cat_vars = NULL, display = c("CP",
-  "C", "P"), subgroups = NULL, mean_vars_for_subgroups = NULL,
-  order_of_vars = NULL, export_rtf = FALSE, rtf_filename = NULL,
-  show_pval = TRUE, digits = 2)
+make_table_one(df, grouping_var, num_vars = NULL, num_display = "PM",
+  binary_cat_vars = NULL, multiple_cat_vars = NULL,
+  cat_display = "CP", subgroups = NULL,
+  mean_vars_for_subgroups = NULL, order_of_vars = NULL,
+  export_rtf = FALSE, rtf_filename = NULL, show_pval = TRUE,
+  digits = 2)
 }
 \arguments{
 \item{df}{Dataset containing covariates}
@@ -17,11 +18,13 @@ make_table_one(df, grouping_var, num_vars = NULL,
 
 \item{num_vars}{Vector of numeric variables}
 
+\item{num_display}{How should numeric variable results be displayed? ('PM' for mean +- sd, 'PRS' for mean (sd))}
+
 \item{binary_cat_vars}{Vector of binary variables (in 0-1 format)}
 
 \item{multiple_cat_vars}{Vector of multiple level categorical variables}
 
-\item{display}{How to display results: `CP` = counts and proportions, `C` = counts, `P` = proportions
+\item{cat_display}{How to display results: `CP` = counts and proportions, `C` = counts, `P` = proportions
 (defaults to `CP`)}
 
 \item{subgroups}{Vector of subgroup variables of interest (must be factors). NOTE:  If you plan to analyze
@@ -40,6 +43,8 @@ Table One.}
 \item{export_rtf}{Logical. Do you want to export an RTF to location specified in `rtf_filename`?}
 
 \item{rtf_filename}{Must be quoted and include `.rtf` extension (See example)}
+
+\item{show_pval}{Logical.  Should the p-value results be displayed?}
 
 \item{digits}{Number of digits to round decimals}
 }

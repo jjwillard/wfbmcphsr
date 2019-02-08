@@ -4,6 +4,8 @@
 #' @param df Dataset containing covariates of interest
 #' @param num_vars Vector of numeric variables
 #' @param grouping_var Variable to group by (will be columns of table)
+#' @param num_display How should results be displayed? ('PM' for mean +- sd, 'PRS' for mean (sd))
+#' @param show_pval Logical.  Should the p-value results be displayed?
 #' @param digits Number of digits to round decimals
 #' @export
 #' @import dplyr
@@ -16,12 +18,12 @@
 
 
 
-summarize_all_numeric <- function(df, num_vars, grouping_var, show_pval = TRUE, digits = 1){
+summarize_all_numeric <- function(df, num_vars, grouping_var, num_display = 'PM', show_pval = TRUE, digits = 1){
 
   grouping_var <- dplyr::enquo(grouping_var)
 
   res <- purrr::map_dfr(syms(num_vars), quantify_numeric, df = df,
-                 grouping_var = !!grouping_var, show_pval = show_pval,
+                 grouping_var = !!grouping_var, num_display = num_display, show_pval = show_pval,
                  digits = digits)
   invisible(res)
 }

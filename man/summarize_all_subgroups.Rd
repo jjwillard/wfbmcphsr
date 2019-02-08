@@ -5,7 +5,7 @@
 \title{Summarize All Subgroups}
 \usage{
 summarize_all_subgroups(df, subgroups, mean_vars, grouping_var,
-  show_pval = TRUE, digits = 1)
+  num_display = "PM", show_pval = TRUE, digits = 1)
 }
 \arguments{
 \item{df}{Dataset containing covariates of interest}
@@ -16,6 +16,10 @@ summarize_all_subgroups(df, subgroups, mean_vars, grouping_var,
 position of corresponding subgroup variable)}
 
 \item{grouping_var}{Variable to group by (will be columns of table)}
+
+\item{num_display}{How should results be displayed? ('PM' for mean +- sd, 'PRS' for mean (sd))}
+
+\item{show_pval}{Logical.  Should the p-value results be displayed?}
 
 \item{digits}{Number of digits to round decimals}
 }

@@ -16,7 +16,7 @@
 #' @param digits Number of digits to round decimals
 #' @export
 #' @import dplyr
-#' @importFrom rlang eval_tidy expr warn
+#' @importFrom rlang abort eval_tidy expr warn
 #' @importFrom stats chisq.test
 #' @importFrom tidyr spread
 #' @importFrom tibble as_tibble
@@ -30,7 +30,7 @@
 #'
 
 quantify_categorical <- function(covariate, df, grouping_var, type = c('multiple', 'binary'),
-                                 display = c('CP', 'C', 'P'), show_pval = TRUE, digits = 1){
+                                 display = 'CP', show_pval = TRUE, digits = 1){
 
   grouping_var <- dplyr::enquo(grouping_var)
   covariate <- dplyr::enquo(covariate)
@@ -95,7 +95,11 @@ quantify_categorical <- function(covariate, df, grouping_var, type = c('multiple
 
   # How should the results be displayed?
 
-  if (toupper(display) == 'C'){
+  if (toupper(display) == 'CP' | is.null(display)){
+    results2 <- results %>%
+      dplyr::select(!!grouping_var, !!covariate,  res) %>%
+      tidyr::spread(!!grouping_var, res)
+  } else if (toupper(display) == 'C'){
 
     results2 <- results %>%
       dplyr::select(!!grouping_var, !!covariate,  var_counts) %>%
@@ -108,9 +112,7 @@ quantify_categorical <- function(covariate, df, grouping_var, type = c('multiple
       tidyr::spread(!!grouping_var, props)
 
   } else {
-    results2 <- results %>%
-      dplyr::select(!!grouping_var, !!covariate,  res) %>%
-      tidyr::spread(!!grouping_var, res)
+    rlang::abort('Incorrect specification for categorical display.')
   }
 
   # What kind of variable is this?

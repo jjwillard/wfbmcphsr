@@ -5,9 +5,10 @@
 #' @param df Dataset containing covariates
 #' @param grouping_var Variable to group by (will be columns of table)
 #' @param num_vars Vector of numeric variables
+#' @param num_display How should numeric variable results be displayed? ('PM' for mean +- sd, 'PRS' for mean (sd))
 #' @param binary_cat_vars Vector of binary variables (in 0-1 format)
 #' @param multiple_cat_vars Vector of multiple level categorical variables
-#' @param display How to display results: `CP` = counts and proportions, `C` = counts, `P` = proportions
+#' @param cat_display How to display results: `CP` = counts and proportions, `C` = counts, `P` = proportions
 #'     (defaults to `CP`)
 #' @param subgroups Vector of subgroup variables of interest (must be factors). NOTE:  If you plan to analyze
 #'     a categorical variable by itself and then also use it for subgroup analysis, it is advised to copy
@@ -21,6 +22,7 @@
 #'     Table One.
 #' @param export_rtf Logical. Do you want to export an RTF to location specified in `rtf_filename`?
 #' @param rtf_filename Must be quoted and include `.rtf` extension (See example)
+#' @param show_pval Logical.  Should the p-value results be displayed?
 #' @param digits Number of digits to round decimals
 #' @export
 #' @import dplyr
@@ -38,8 +40,8 @@
 
 
 
-make_table_one <- function(df, grouping_var, num_vars = NULL,
-                           binary_cat_vars = NULL, multiple_cat_vars = NULL, display = c('CP', 'C', 'P'),
+make_table_one <- function(df, grouping_var, num_vars = NULL, num_display = 'PM',
+                           binary_cat_vars = NULL, multiple_cat_vars = NULL, cat_display = 'CP',
                            subgroups = NULL, mean_vars_for_subgroups = NULL,
                            order_of_vars = NULL,
                            export_rtf = FALSE, rtf_filename = NULL,
@@ -47,14 +49,14 @@ make_table_one <- function(df, grouping_var, num_vars = NULL,
 
   grouping_var <- dplyr::enquo(grouping_var)
 
-  all_nums <- summarize_all_numeric(df = df, num_vars = num_vars, grouping_var = !!grouping_var,
+  all_nums <- summarize_all_numeric(df = df, num_vars = num_vars, grouping_var = !!grouping_var, num_display = num_display,
                                     show_pval = show_pval, digits = digits)
 
   all_cats <- summarize_all_categorical(df = df, binary_cat_vars = binary_cat_vars, multiple_cat_vars = multiple_cat_vars,
-                                        grouping_var = !!grouping_var, display = display, show_pval = show_pval, digits = digits)
+                                        grouping_var = !!grouping_var, display = cat_display, show_pval = show_pval, digits = digits)
 
   subs <- summarize_all_subgroups(df = df, subgroups = subgroups, mean_vars = mean_vars_for_subgroups,
-                                  grouping_var = !!grouping_var, show_pval = show_pval, digits = digits)
+                                  grouping_var = !!grouping_var, num_display = num_display, show_pval = show_pval, digits = digits)
 
 
   tb1 <- rbind(all_nums, all_cats, subs)

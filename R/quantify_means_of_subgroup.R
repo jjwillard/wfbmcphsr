@@ -7,6 +7,7 @@
 #' @param mean_var Numeric variable from which to calculate mean and sd
 #' @param df Dataset containing covariates
 #' @param grouping_var Variable to group by (will be columns of table)
+#' @param num_display How should results be displayed? ('PM' for mean +- sd, 'PRS' for mean (sd))
 #' @param show_pval Logical.  Should the p-value results be displayed?
 #' @param digits Number of digits to round decimals
 #' @export
@@ -24,7 +25,7 @@
 #' }
 #'
 
-quantify_means_of_subgroup <- function(subgroup, mean_var, df, grouping_var, show_pval = TRUE, digits = 1){
+quantify_means_of_subgroup <- function(subgroup, mean_var, df, grouping_var, num_display = 'PM', show_pval = TRUE, digits = 1){
 
   mean_var <- dplyr::enquo(mean_var)
   subgroup <- dplyr::enquo(subgroup)
@@ -54,15 +55,28 @@ quantify_means_of_subgroup <- function(subgroup, mean_var, df, grouping_var, sho
 
   if (rlang::eval_tidy(rlang::expr(is.numeric(!!mean_var)), data = fil_df)){
 
-    # Calculate mean/sd
+    if (toupper(num_display) == 'PM' | is.null(num_display)){
+      calc <- fil_df %>%
+        dplyr::group_by(!!grouping_var, !!subgroup) %>%
+        dplyr::summarize(res = paste0(format(round(mean(!!mean_var), digits), nsmall = digits),
+                                      " \u00B1 ",
+                                      format(round(sd(!!mean_var), digits), nsmall = digits))) %>%
+        tidyr::spread(!!grouping_var, res)
 
-    calc <- fil_df %>%
-      dplyr::group_by(!!grouping_var, !!subgroup) %>%
-      dplyr::summarize(res = paste0(format(round(mean(!!mean_var), digits), nsmall = digits),
-                                    " (",
-                                    format(round(sd(!!mean_var), digits), nsmall = digits),
-                                    ")")) %>%
-      tidyr::spread(!!grouping_var, res)
+    } else if(toupper(num_display) == 'PRS') {
+      calc <- fil_df %>%
+        dplyr::group_by(!!grouping_var, !!subgroup) %>%
+        dplyr::summarize(res = paste0(format(round(mean(!!mean_var), digits), nsmall = digits),
+                                      " (",
+                                      format(round(sd(!!mean_var), digits), nsmall = digits),
+                                      ")")) %>%
+        tidyr::spread(!!grouping_var, res)
+    } else {
+      rlang::abort("Incorrect specification for numeric display. (Suggest: 'PM' or 'PRS')")
+    }
+
+
+
 
     # Calculate p-value and sig flag
 
