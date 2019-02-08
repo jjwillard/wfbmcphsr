@@ -105,7 +105,6 @@ In the future, I hope to add the following:
 
 - More error handling to deal with common type issues
 - A simulated baseline dataset to play with in the package and to display real examples in the vignette
-- Different display options for mean/sd
 - Count and proportion calculations for subgroups (currently only supports mean/sd calculation)
 - Anything else you think might be convenient to have (email me!)
 
