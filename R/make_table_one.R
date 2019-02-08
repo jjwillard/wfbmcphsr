@@ -43,18 +43,18 @@ make_table_one <- function(df, grouping_var, num_vars = NULL,
                            subgroups = NULL, mean_vars_for_subgroups = NULL,
                            order_of_vars = NULL,
                            export_rtf = FALSE, rtf_filename = NULL,
-                           digits = 2){
+                           show_pval = TRUE, digits = 2){
 
   grouping_var <- dplyr::enquo(grouping_var)
 
   all_nums <- summarize_all_numeric(df = df, num_vars = num_vars, grouping_var = !!grouping_var,
-                                    digits = digits)
+                                    show_pval = show_pval, digits = digits)
 
   all_cats <- summarize_all_categorical(df = df, binary_cat_vars = binary_cat_vars, multiple_cat_vars = multiple_cat_vars,
-                                        grouping_var = !!grouping_var, display = display, digits = digits)
+                                        grouping_var = !!grouping_var, display = display, show_pval = show_pval, digits = digits)
 
   subs <- summarize_all_subgroups(df = df, subgroups = subgroups, mean_vars = mean_vars_for_subgroups,
-                                  grouping_var = !!grouping_var, digits = digits)
+                                  grouping_var = !!grouping_var, show_pval = show_pval, digits = digits)
 
 
   tb1 <- rbind(all_nums, all_cats, subs)

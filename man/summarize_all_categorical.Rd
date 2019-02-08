@@ -5,7 +5,8 @@
 \title{Summarize All Categorical Variables}
 \usage{
 summarize_all_categorical(df, binary_cat_vars, multiple_cat_vars,
-  grouping_var, display = c("CP", "C", "P"), digits = 1)
+  grouping_var, display = c("CP", "C", "P"), show_pval = TRUE,
+  digits = 1)
 }
 \arguments{
 \item{df}{Dataset containing covariates of interest}

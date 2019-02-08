@@ -5,7 +5,7 @@
 \title{Summarize All Subgroups}
 \usage{
 summarize_all_subgroups(df, subgroups, mean_vars, grouping_var,
-  digits = 1)
+  show_pval = TRUE, digits = 1)
 }
 \arguments{
 \item{df}{Dataset containing covariates of interest}

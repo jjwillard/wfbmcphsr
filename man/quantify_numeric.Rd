@@ -4,7 +4,8 @@
 \alias{quantify_numeric}
 \title{Quantify Numeric Variable}
 \usage{
-quantify_numeric(covariate, df, grouping_var, digits = 1)
+quantify_numeric(covariate, df, grouping_var, show_pval = TRUE,
+  digits = 1)
 }
 \arguments{
 \item{covariate}{Numeric variable of interest}
@@ -12,6 +13,8 @@ quantify_numeric(covariate, df, grouping_var, digits = 1)
 \item{df}{Dataset containing covariate}
 
 \item{grouping_var}{Variable to group by (will be columns of table)}
+
+\item{show_pval}{Logical.  Should the p-value results be displayed?}
 
 \item{digits}{Number of digits to round decimals to}
 }

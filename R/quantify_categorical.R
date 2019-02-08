@@ -30,7 +30,7 @@
 #'
 
 quantify_categorical <- function(covariate, df, grouping_var, type = c('multiple', 'binary'),
-                                 display = c('CP', 'C', 'P'), digits = 1){
+                                 display = c('CP', 'C', 'P'), show_pval = TRUE, digits = 1){
 
   grouping_var <- dplyr::enquo(grouping_var)
   covariate <- dplyr::enquo(covariate)
@@ -133,7 +133,12 @@ quantify_categorical <- function(covariate, df, grouping_var, type = c('multiple
     blanks <- matrix(data = '', nrow = length(lev), ncol = length(pv))
     new_pv <- rbind(pv, blanks)
 
-    res2 <- cbind(var, results, new_pv, stringsAsFactors = FALSE)
+
+    if (show_pval == TRUE){
+      res2 <- cbind(var, results, new_pv, stringsAsFactors = FALSE)
+    } else {
+      res2 <- cbind(var, results, stringsAsFactors = FALSE)
+    }
 
     invisible(res2)
 
@@ -142,7 +147,13 @@ quantify_categorical <- function(covariate, df, grouping_var, type = c('multiple
     results <- results2 %>% dplyr::filter(!!covariate == 1) %>% dplyr::select(-!!covariate)
 
     var <- as.character(cov_name)
-    results <- cbind(var, results, pv, stringsAsFactors = FALSE)
+
+
+    if (show_pval == TRUE){
+      results <- cbind(var, results, pv, stringsAsFactors = FALSE)
+    } else {
+      results <- cbind(var, results, stringsAsFactors = FALSE)
+    }
 
     invisible(results)
   }

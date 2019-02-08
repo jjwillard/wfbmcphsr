@@ -32,12 +32,12 @@
 
 
 
-summarize_all_subgroups <- function(df, subgroups, mean_vars, grouping_var, digits = 1){
+summarize_all_subgroups <- function(df, subgroups, mean_vars, grouping_var, show_pval = TRUE, digits = 1){
 
   grouping_var <- dplyr::enquo(grouping_var)
 
   sub <- purrr::map2_dfr(syms(subgroups), syms(mean_vars), quantify_means_of_subgroup, df = df,
-                  grouping_var = !!grouping_var, digits = digits)
+                  grouping_var = !!grouping_var, show_pval = show_pval, digits = digits)
 
   invisible(sub)
 }

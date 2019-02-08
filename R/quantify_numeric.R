@@ -4,6 +4,7 @@
 #' @param covariate Numeric variable of interest
 #' @param df Dataset containing covariate
 #' @param grouping_var Variable to group by (will be columns of table)
+#' @param show_pval Logical.  Should the p-value results be displayed?
 #' @param digits Number of digits to round decimals to
 #' @export
 #' @import dplyr
@@ -17,7 +18,8 @@
 #'
 
 
-quantify_numeric <- function(covariate, df, grouping_var, digits = 1){
+
+quantify_numeric <- function(covariate, df, grouping_var, show_pval = TRUE, digits = 1){
 
   grouping_var <- dplyr::enquo(grouping_var)
   covariate <- dplyr::enquo(covariate)
@@ -64,7 +66,10 @@ quantify_numeric <- function(covariate, df, grouping_var, digits = 1){
 
   var <- cov_name
 
-  res <- cbind(var, res, pv, stringsAsFactors = FALSE)
-
+  if (show_pval == TRUE){
+    res <- cbind(var, res, pv, stringsAsFactors = FALSE)
+  } else {
+    res <- cbind(var, res, stringsAsFactors = FALSE)
+  }
   invisible(res)
 }

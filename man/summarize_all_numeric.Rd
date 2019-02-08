@@ -4,7 +4,8 @@
 \alias{summarize_all_numeric}
 \title{Summarize All Numeric Variables}
 \usage{
-summarize_all_numeric(df, num_vars, grouping_var, digits = 1)
+summarize_all_numeric(df, num_vars, grouping_var, show_pval = TRUE,
+  digits = 1)
 }
 \arguments{
 \item{df}{Dataset containing covariates of interest}

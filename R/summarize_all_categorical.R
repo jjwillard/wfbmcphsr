@@ -27,7 +27,7 @@
 
 
 summarize_all_categorical <- function(df, binary_cat_vars, multiple_cat_vars, grouping_var,
-                                      display = c('CP', 'C', 'P'), digits = 1){
+                                      display = c('CP', 'C', 'P'), show_pval = TRUE, digits = 1){
 
   grouping_var <- dplyr::enquo(grouping_var)
 
@@ -35,12 +35,12 @@ summarize_all_categorical <- function(df, binary_cat_vars, multiple_cat_vars, gr
 
   binary <- purrr::map_dfr(syms(binary_cat_vars), quantify_categorical, df = df,
                     grouping_var = !!grouping_var,
-                    type = 'binary', display = display, digits = digits)
+                    type = 'binary', display = display, show_pval = show_pval, digits = digits)
 
 
   multiple <- purrr::map_dfr(syms(multiple_cat_vars), quantify_categorical, df = df,
-                      grouping_var = !!grouping_var,
-                      type = 'multiple', display = display, digits = digits)
+                      grouping_var = !!grouping_var, show_pval = show_pval,
+                      type = 'multiple', display = display, show_pval = show_pval, digits = digits)
 
   res <- rbind(binary, multiple)
 

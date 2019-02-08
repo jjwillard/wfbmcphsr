@@ -8,7 +8,7 @@ make_table_one(df, grouping_var, num_vars = NULL,
   binary_cat_vars = NULL, multiple_cat_vars = NULL, display = c("CP",
   "C", "P"), subgroups = NULL, mean_vars_for_subgroups = NULL,
   order_of_vars = NULL, export_rtf = FALSE, rtf_filename = NULL,
-  digits = 2)
+  show_pval = TRUE, digits = 2)
 }
 \arguments{
 \item{df}{Dataset containing covariates}

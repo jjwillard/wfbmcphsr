@@ -16,12 +16,12 @@
 
 
 
-summarize_all_numeric <- function(df, num_vars, grouping_var, digits = 1){
+summarize_all_numeric <- function(df, num_vars, grouping_var, show_pval = TRUE, digits = 1){
 
   grouping_var <- dplyr::enquo(grouping_var)
 
   res <- purrr::map_dfr(syms(num_vars), quantify_numeric, df = df,
-                 grouping_var = !!grouping_var,
+                 grouping_var = !!grouping_var, show_pval = show_pval,
                  digits = digits)
   invisible(res)
 }

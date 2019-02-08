@@ -7,6 +7,7 @@
 #' @param mean_var Numeric variable from which to calculate mean and sd
 #' @param df Dataset containing covariates
 #' @param grouping_var Variable to group by (will be columns of table)
+#' @param show_pval Logical.  Should the p-value results be displayed?
 #' @param digits Number of digits to round decimals
 #' @export
 #' @importFrom broom tidy
@@ -23,7 +24,7 @@
 #' }
 #'
 
-quantify_means_of_subgroup <- function(subgroup, mean_var, df, grouping_var, digits = 1){
+quantify_means_of_subgroup <- function(subgroup, mean_var, df, grouping_var, show_pval = TRUE, digits = 1){
 
   mean_var <- dplyr::enquo(mean_var)
   subgroup <- dplyr::enquo(subgroup)
@@ -106,8 +107,12 @@ quantify_means_of_subgroup <- function(subgroup, mean_var, df, grouping_var, dig
 
 
   new_pv <- rbind(blanks, pv)
-  final_res <- cbind(var, results, new_pv, stringsAsFactors = FALSE)
 
+  if (show_pval == TRUE){
+    final_res <- cbind(var, results, new_pv, stringsAsFactors = FALSE)
+  } else {
+    final_res <- cbind(var, results, stringsAsFactors = FALSE)
+  }
 
   invisible(final_res)
 
