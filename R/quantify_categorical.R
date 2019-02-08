@@ -146,7 +146,7 @@ quantify_categorical <- function(covariate, df, grouping_var, type = c('multiple
 
   } else if (type == 'binary') {
 
-    results <- results2 %>% dplyr::filter(!!covariate == 1) %>% dplyr::select(-!!covariate)
+    results <- results2 %>% dplyr::filter(!!covariate == max(levels(!!covariate))) %>% dplyr::select(-!!covariate)
 
     var <- as.character(cov_name)
 
