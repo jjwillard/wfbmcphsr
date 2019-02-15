@@ -140,7 +140,7 @@ quantify_counts_of_subgroup <- function(subgroup_c, count_var, df, grouping_var,
 
   lev <- levels(purrr::as_vector(unique(df[sub_name])))
 
-  var<- c(sub_name, lev)
+  var <- c(paste0(sub_name, " [count/prop(", count_name,")]"), lev)
 
   new_pv <- rbind(row_1, pv)
 
