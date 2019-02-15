@@ -10,7 +10,7 @@
 #' @param multiple_cat_vars Vector of multiple level categorical variables
 #' @param cat_display How to display results: `CP` = counts and proportions, `C` = counts, `P` = proportions
 #'     (defaults to `CP`)
-#' @param subgroups Vector of subgroup variables of interest (must be factors). NOTE:  If you plan to analyze
+#' @param subgroups_m Vector of subgroup variables of interest (must be factors). NOTE:  If you plan to analyze
 #'     a categorical variable by itself and then also use it for subgroup analysis, it is advised to copy
 #'     and rename the columns of the categorical variables you wish to use as subgroups (ie. rename variable
 #'     to something like `variable_sub``) so Table One can be properly sorted to reflect your specification in
@@ -33,7 +33,7 @@
 #' @examples \dontrun{
 #' make_table_one(df = obpv_baseline, grouping_var = obpv_quintile, num_vars = num_vars,
 #' binary_cat_vars = binary_cat_vars, multiple_cat_vars = multiple_cat_vars, display = 'CP',
-#' subgroups = subgroups, mean_vars_for_subgroups = mean_vars, order_of_vars = var_order,
+#' subgroups_m = subgroups, mean_vars_for_subgroups = mean_vars, order_of_vars = var_order,
 #' export_rtf = TRUE, rtf_filename = 'my_location/my_filename.rtf', digits = 2)
 #' }
 
@@ -42,7 +42,7 @@
 
 make_table_one <- function(df, grouping_var, num_vars = NULL, num_display = 'PM',
                            binary_cat_vars = NULL, multiple_cat_vars = NULL, cat_display = 'CP',
-                           subgroups = NULL, mean_vars_for_subgroups = NULL,
+                           subgroups_m = NULL, mean_vars_for_subgroups = NULL,
                            order_of_vars = NULL,
                            export_rtf = FALSE, rtf_filename = NULL,
                            show_pval = TRUE, digits = 2){
@@ -55,7 +55,7 @@ make_table_one <- function(df, grouping_var, num_vars = NULL, num_display = 'PM'
   all_cats <- summarize_all_categorical(df = df, binary_cat_vars = binary_cat_vars, multiple_cat_vars = multiple_cat_vars,
                                         grouping_var = !!grouping_var, display = cat_display, show_pval = show_pval, digits = digits)
 
-  subs <- summarize_all_subgroups(df = df, subgroups = subgroups, mean_vars = mean_vars_for_subgroups,
+  subs <- summarize_all_subgroups(df = df, subgroups_m = subgroups_m, mean_vars = mean_vars_for_subgroups,
                                   grouping_var = !!grouping_var, num_display = num_display, show_pval = show_pval, digits = digits)
 
 

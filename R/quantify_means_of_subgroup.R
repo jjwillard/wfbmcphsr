@@ -3,7 +3,7 @@
 #' @description This function allows you to calculate  mean and sd of a numeric variable by grouping
 #'     and specific subgroup variable levels (ie. mean age of those belonging to subgroup 1 or 2 by
 #'     levels of grouping variable)
-#' @param subgroup Subgroup variable of interest (must be factor)
+#' @param subgroup_m Subgroup variable of interest (must be factor)
 #' @param mean_var Numeric variable from which to calculate mean and sd
 #' @param df Dataset containing covariates
 #' @param grouping_var Variable to group by (will be columns of table)
@@ -20,31 +20,31 @@
 #' @return A data frame summarizing mean and sd of a numeric variable by grouping and specific subgroup
 #'     variable levels
 #' @examples \dontrun{
-#' quantify_means_of_subgroup(subgroup = Edu_4cat, mean_var = BMI, df = obpv_baseline,
+#' quantify_means_of_subgroup(subgroup_m = Edu_4cat, mean_var = BMI, df = obpv_baseline,
 #' grouping_var = obpv_quintile)
 #' }
 #'
 
-quantify_means_of_subgroup <- function(subgroup, mean_var, df, grouping_var, num_display = 'PM', show_pval = TRUE, digits = 1){
+quantify_means_of_subgroup <- function(subgroup_m, mean_var, df, grouping_var, num_display = 'PM', show_pval = TRUE, digits = 1){
 
   mean_var <- dplyr::enquo(mean_var)
-  subgroup <- dplyr::enquo(subgroup)
+  subgroup_m <- dplyr::enquo(subgroup_m)
   grouping_var <- dplyr::enquo(grouping_var)
-  sub_name <- dplyr::quo_name(subgroup)
+  sub_name <- dplyr::quo_name(subgroup_m)
   mean_name <- dplyr::quo_name(mean_var)
 
   # Filter out NA's, produce warning
 
   fil_df <- df %>%
-    dplyr::select(!!grouping_var, !!subgroup, !!mean_var) %>%
-    dplyr::filter(!is.na(!!subgroup) & !is.na(!!mean_var))
+    dplyr::select(!!grouping_var, !!subgroup_m, !!mean_var) %>%
+    dplyr::filter(!is.na(!!subgroup_m) & !is.na(!!mean_var))
 
 
   num_na <- nrow(df) - nrow(fil_df)
 
 
   if(num_na > 0){
-    na_sub <- rlang::eval_tidy(rlang::expr(sum(is.na(!!subgroup))), data = df)
+    na_sub <- rlang::eval_tidy(rlang::expr(sum(is.na(!!subgroup_m))), data = df)
     na_var <- rlang::eval_tidy(rlang::expr(sum(is.na(!!mean_var))), data = df)
 
     rlang::warn(paste0("There were ", num_na, " total observations removed; ", na_sub, " NA's removed for ", rlang::eval_tidy(rlang::expr(!!sub_name)),
@@ -57,7 +57,7 @@ quantify_means_of_subgroup <- function(subgroup, mean_var, df, grouping_var, num
 
     if (toupper(num_display) == 'PM' | is.null(num_display)){
       calc <- fil_df %>%
-        dplyr::group_by(!!grouping_var, !!subgroup) %>%
+        dplyr::group_by(!!grouping_var, !!subgroup_m) %>%
         dplyr::summarize(res = paste0(format(round(mean(!!mean_var), digits), nsmall = digits),
                                       " \u00B1 ",
                                       format(round(sd(!!mean_var), digits), nsmall = digits))) %>%
@@ -65,7 +65,7 @@ quantify_means_of_subgroup <- function(subgroup, mean_var, df, grouping_var, num
 
     } else if(toupper(num_display) == 'PRS') {
       calc <- fil_df %>%
-        dplyr::group_by(!!grouping_var, !!subgroup) %>%
+        dplyr::group_by(!!grouping_var, !!subgroup_m) %>%
         dplyr::summarize(res = paste0(format(round(mean(!!mean_var), digits), nsmall = digits),
                                       " (",
                                       format(round(sd(!!mean_var), digits), nsmall = digits),
@@ -80,7 +80,7 @@ quantify_means_of_subgroup <- function(subgroup, mean_var, df, grouping_var, num
 
     # Calculate p-value and sig flag
 
-    pval <- fil_df %>% dplyr::group_by(!!subgroup) %>%
+    pval <- fil_df %>% dplyr::group_by(!!subgroup_m) %>%
       dplyr::group_map( ~ broom::tidy(rlang::eval_tidy(
         rlang::expr(stats::anova(stats::lm(!!mean_var ~ as.factor(!!grouping_var), data = .x))),
         data = .x))) %>%
@@ -101,7 +101,7 @@ quantify_means_of_subgroup <- function(subgroup, mean_var, df, grouping_var, num
 
 
   # Get rid of first column
-  results <- calc  %>% dplyr::select(-!!subgroup)
+  results <- calc  %>% dplyr::select(-!!subgroup_m)
 
   #Add a row with blank strings
   row_1 <- ''

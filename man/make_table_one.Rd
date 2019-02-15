@@ -6,7 +6,7 @@
 \usage{
 make_table_one(df, grouping_var, num_vars = NULL, num_display = "PM",
   binary_cat_vars = NULL, multiple_cat_vars = NULL,
-  cat_display = "CP", subgroups = NULL,
+  cat_display = "CP", subgroups_m = NULL,
   mean_vars_for_subgroups = NULL, order_of_vars = NULL,
   export_rtf = FALSE, rtf_filename = NULL, show_pval = TRUE,
   digits = 2)
@@ -27,7 +27,7 @@ make_table_one(df, grouping_var, num_vars = NULL, num_display = "PM",
 \item{cat_display}{How to display results: `CP` = counts and proportions, `C` = counts, `P` = proportions
 (defaults to `CP`)}
 
-\item{subgroups}{Vector of subgroup variables of interest (must be factors). NOTE:  If you plan to analyze
+\item{subgroups_m}{Vector of subgroup variables of interest (must be factors). NOTE:  If you plan to analyze
 a categorical variable by itself and then also use it for subgroup analysis, it is advised to copy
 and rename the columns of the categorical variables you wish to use as subgroups (ie. rename variable
 to something like `variable_sub``) so Table One can be properly sorted to reflect your specification in
@@ -59,7 +59,7 @@ This function allows you to make a Table One for manuscript publication in the
 \dontrun{
 make_table_one(df = obpv_baseline, grouping_var = obpv_quintile, num_vars = num_vars,
 binary_cat_vars = binary_cat_vars, multiple_cat_vars = multiple_cat_vars, display = 'CP',
-subgroups = subgroups, mean_vars_for_subgroups = mean_vars, order_of_vars = var_order,
+subgroups_m = subgroups, mean_vars_for_subgroups = mean_vars, order_of_vars = var_order,
 export_rtf = TRUE, rtf_filename = 'my_location/my_filename.rtf', digits = 2)
 }
 }

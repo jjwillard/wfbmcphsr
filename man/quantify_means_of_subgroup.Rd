@@ -4,11 +4,11 @@
 \alias{quantify_means_of_subgroup}
 \title{Quantify Means of Subgroup}
 \usage{
-quantify_means_of_subgroup(subgroup, mean_var, df, grouping_var,
+quantify_means_of_subgroup(subgroup_m, mean_var, df, grouping_var,
   num_display = "PM", show_pval = TRUE, digits = 1)
 }
 \arguments{
-\item{subgroup}{Subgroup variable of interest (must be factor)}
+\item{subgroup_m}{Subgroup variable of interest (must be factor)}
 
 \item{mean_var}{Numeric variable from which to calculate mean and sd}
 
@@ -33,7 +33,7 @@ This function allows you to calculate  mean and sd of a numeric variable by grou
 }
 \examples{
 \dontrun{
-quantify_means_of_subgroup(subgroup = Edu_4cat, mean_var = BMI, df = obpv_baseline,
+quantify_means_of_subgroup(subgroup_m = Edu_4cat, mean_var = BMI, df = obpv_baseline,
 grouping_var = obpv_quintile)
 }
 
