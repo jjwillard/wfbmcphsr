@@ -7,7 +7,8 @@
 make_table_one(df, grouping_var, num_vars = NULL, num_display = "PM",
   binary_cat_vars = NULL, multiple_cat_vars = NULL,
   cat_display = "CP", subgroups_m = NULL,
-  mean_vars_for_subgroups = NULL, order_of_vars = NULL,
+  mean_vars_for_subgroups = NULL, subgroups_c = NULL,
+  count_vars_for_subgroups = NULL, order_of_vars = NULL,
   export_rtf = FALSE, rtf_filename = NULL, show_pval = TRUE,
   digits = 2)
 }
@@ -37,6 +38,10 @@ categorical variable.}
 \item{mean_vars_for_subgroups}{Vector of numeric variables from which to calculate mean and sd (must match vector
 position of corresponding subgroup variable)}
 
+\item{subgroups_c}{Subgroup variable of interest (must be factor, same naming suggestion as in `subgroups_m`` above)}
+
+\item{count_vars_for_subgroups}{Factor variable from which to calculate counts and proportions}
+
 \item{order_of_vars}{A vector of all variables listed in the order of the rows you desire for your
 Table One.}
 
@@ -59,7 +64,7 @@ This function allows you to make a Table One for manuscript publication in the
 \dontrun{
 make_table_one(df = obpv_baseline, grouping_var = obpv_quintile, num_vars = num_vars,
 binary_cat_vars = binary_cat_vars, multiple_cat_vars = multiple_cat_vars, display = 'CP',
-subgroups_m = subgroups, mean_vars_for_subgroups = mean_vars, order_of_vars = var_order,
-export_rtf = TRUE, rtf_filename = 'my_location/my_filename.rtf', digits = 2)
+subgroups_m = subgroups_m, mean_vars_for_subgroups = mean_vars, subgroups_c = subgroups_c, count_vars_for_subgroups = count_vars,
+order_of_vars = var_order, export_rtf = TRUE, rtf_filename = 'my_location/my_filename.rtf', show_pval = TRUE, digits = 2)
 }
 }

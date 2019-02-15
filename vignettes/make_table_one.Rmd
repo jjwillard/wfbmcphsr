@@ -23,8 +23,8 @@ In health science research, producing tables of baseline characteristics (common
 Pre-function data cleaning:
 
 - Import your data
-- Clean appropriately (for binary variables, give 0-1 values as results will show the summary values of level 1 only)
-- Create vectors of names for numeric variables, binary variables, multiple level categorical variables, and two vectors corresponding to subgroups of interest and the type of mean you wish to calculate for each subgroup
+- Clean appropriately. Note that for binary variables, you should recode your levels to 0-1 values as results will show the summary values of level 1 only. (Follow standard naming convention, where 'YES' = 1 and 'NO' = 0)
+- Create vectors of names for numeric variables, binary variables, multiple level categorical variables, and vectors corresponding to subgroups of interest for which you would like to calculate the mean or counts of another variable (see below)
 - Make all categorical variables factors (this includes binary, multiple level categorical and subgroups)
 - Finally, create a vector containing the order of variables as you wish them to be displayed in your final table
 
@@ -37,25 +37,33 @@ Using `make_table_one`:
 ## The function `make_table_one`
 ### Usage
 
-    make_table_one(df, grouping_var, num_vars = NULL,
-      binary_cat_vars = NULL, multiple_cat_vars = NULL, display = c("CP","C", "P"), subgroups = NULL,
-      mean_vars_for_subgroups = NULL, order_of_vars = NULL, export_rtf = FALSE, rtf_filename = NULL,
-      digits = 2)
+    make_table_one(df, grouping_var, num_vars = NULL, num_display = "PM",
+      binary_cat_vars = NULL, multiple_cat_vars = NULL, cat_display = "CP", 
+      subgroups_m = NULL, mean_vars_for_subgroups = NULL, 
+      subgroups_c = NULL, count_vars_for_subgroups = NULL, 
+      order_of_vars = NULL, 
+      export_rtf = FALSE, rtf_filename = NULL,
+      show_pval = TRUE, digits = 2)
 
 ### Parameters
 
 - `df`: Dataset containing covariates
-- `grouping_var`: Variable to group by (will be columns of table)
+- `grouping_var`: Variable to group by (will be columns of table).  Must be included (ie. one column summary tables currently not allowed).
 - `num_vars`: Vector of numeric variables
+- `num_display`: How should numeric variable results be displayed? (`'PM'` for mean +- sd, `'PRS'` for mean (sd), defaults to `'PM'`)
 - `binary_cat_vars`: Vector of binary variables (in 0-1 format)
 - `multiple_cat_vars`: Vector of multiple level categorical variables
-- `display`: How to display categorical results: 'CP' = counts and proportions, 'C' = counts, 'P' = proportions (defaults to 'CP')
-- `subgroups`: Vector of subgroup variables of interest (must be factors). NOTE: If you plan to analyze a categorical variable by itself and then also use it for subgroup analysis, it is advised to copy and rename the columns of the categorical variables you wish to use as subgroups (ie. rename variable to something like 'variable_sub") so Table One can be properly sorted to reflect your specification in 'order_of_vars'. If the subgroup does not have a unique name, it will be sorted directly below the categorical variable.
-- `mean_vars_for_subgroups`: Vector of numeric variables from which to calculate mean and sd (must match vector position of corresponding subgroup variable)
+- `cat_display`: How should categorical results be displayed? (`'CP'` = counts and proportions, `'C'` = counts, 
+`'P'` = proportions, defaults to `'CP'`)
+- `subgroups_m`: Vector of subgroup variables (must be factors) of interest for calculating means of a numeric variable. NOTE: If you plan to analyze a categorical variable by itself and then also use it for subgroup analysis, it is advised to copy and rename the columns of the categorical variables you wish to use as subgroups (ie. rename variable to something like 'variable_sub_m") so Table One can be properly sorted to reflect your specification in 'order_of_vars'. If the subgroup does not have a unique name, it will be sorted directly below the categorical variable.
+- `mean_vars_for_subgroups`: Vector of numeric variables from which to calculate mean and sd (must match vector position of corresponding `subgroups_m` variable)
+- `subgroups_c`: Vector of subgroup variables (must be factors) of interest for calculating counts of a BINARY variable. NOTE: Follow same naming convention of subgroups as that listed in `subgroups_m`.
+- `count_vars_for_subgroups`: Vector of BINARY variables from which to calculate mean and sd (must match vector position of corresponding `subgroups_c` variable.) Results are displayed for the case where the binary count variable is equal to 1.
 - `order_of_vars`: A vector of all variables listed in the order of the rows you desire for your Table One.
-- `export_rtf`: Logical. Do you want to export an RTF to location specified in 'rtf_filename'? (Defaults to `FALSE`)
+- `export_rtf`: Logical. Do you want to export an RTF to location specified in `'rtf_filename'`? (Defaults to `FALSE`)
 - `rtf_filename`: Must be quoted and include '.rtf' extension 
-- `digits`: Number of digits to round decimals
+- `show_pval`: Logical.  Should the p-value results be displayed? Defaults to `TRUE`.
+- `digits`: Number of digits to round decimals.  Defaults to `2`.
 
 ## Pre-function data cleaning
 
@@ -75,14 +83,18 @@ Now make vectors of the names of your different types of variables. NOTE: If you
     binary_cat_vars <- c('bin_var1', 'bin_var2', ...)
     multiple_cat_vars <- c('mc_var1', 'mc_var2', ...)
     
-    subgroups <- c('subgroup1', subgroup2', ...)
-    mean_vars <- c('calulate_mean_of_this_for_subgroup1', 'calulate_mean_of_this_for_subgroup2', ...)
+    subgroups_m <- c('subgroup_m_1', subgroup_m_2', ...)
+    mean_vars <- c('calulate_mean_of_this_for_subgroup_m_1', 'calulate_mean_of_this_for_subgroup_m_2', ...)
     
-Convert your categorical variables into factors (very important):
+    subgroups_c <- c('subgroup_c_1', subgroup_c_2', ...)
+    count_vars <- c('calulate_count_of_this_for_subgroup_c_1', 'calulate_count_of_this_for_subgroup_c_2', ...))
+    
+Convert your categorical variables into factors (VERY IMPORTANT):
 
     my_cleaned_baseline[binary_cat_vars] <- lapply(my_cleaned_baseline[binary_cat_vars], factor)
     my_cleaned_baseline[multiple_cat_vars] <- lapply(my_cleaned_baseline[multiple_cat_vars], factor)
-    my_cleaned_baseline[subgroups] <- lapply(my_cleaned_baseline[subgroups], factor)
+    my_cleaned_baseline[subgroups_m] <- lapply(my_cleaned_baseline[subgroups_m], factor)
+    my_cleaned_baseline[subgroups_c] <- lapply(my_cleaned_baseline[subgroups_c], factor)
     
 Create a vector containing the order of variables as you wish them to be displayed in your final table:
 
@@ -92,10 +104,14 @@ Create a vector containing the order of variables as you wish them to be display
 
 Once you have your data cleaned and vectors of variable names as above, substitute into `make_table_one` and save as an object for viewing within R.
 
-    table_1 <- make_table_one(df = my_cleaned_baseline, grouping_var = random_assignment_group, num_vars = num_vars,
-      binary_cat_vars = binary_cat_vars, multiple_cat_vars = multiple_cat_vars, display = 'CP',
-      subgroups = subgroups, mean_vars_for_subgroups = mean_vars, order_of_vars = var_order,
-      export_rtf = TRUE, rtf_filename = 'my_location/my_filename.rtf', digits = 2)
+    table_1 <- make_table_one(df = my_cleaned_baseline, grouping_var = random_assignment_group, 
+      num_vars = num_vars, num_display = 'PM', 
+      binary_cat_vars = binary_cat_vars, multiple_cat_vars = multiple_cat_vars, cat_display = 'CP',
+      subgroups_m = subgroups_m, mean_vars_for_subgroups = mean_vars, 
+      subgroups_c = subgroups_c, count_vars_for_subgroups = count_vars,
+      order_of_vars = var_order,
+      export_rtf = TRUE, rtf_filename = 'my_location/my_filename.rtf', 
+      show_pval = TRUE, digits = 2)
 
 Notice that `export_rtf = TRUE` so an RTF will be generated at the location specified in `rtf_filename = 'my_location/my_filename.rtf'`.
 
@@ -103,10 +119,10 @@ Notice that `export_rtf = TRUE` so an RTF will be generated at the location spec
 
 In the future, I hope to add the following:
 
-- More error handling to deal with common type issues
-- A simulated baseline dataset to play with in the package and to display real examples in the vignette
-- Count and proportion calculations for subgroups (currently only supports mean/sd calculation)
-- Anything else you think might be convenient to have (email me!)
+- More error handling to deal with common type and value issues 
+- A simulated baseline dataset to play with in the package 
+- A full tutorial with the simulated dataset walking through each step
+- Any other functionality you think might be convenient to have (email me!)
 
 ## Thanks for using `make_table_one`!
 

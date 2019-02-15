@@ -12,7 +12,7 @@
 
 <meta name="author" content="James Willard" />
 
-<meta name="date" content="2019-02-08" />
+<meta name="date" content="2019-02-15" />
 
 <title>Introduction to make_table_one</title>
 
@@ -32,7 +32,7 @@
 
 <h1 class="title toc-ignore">Introduction to make_table_one</h1>
 <h4 class="author"><em>James Willard</em></h4>
-<h4 class="date"><em>2019-02-08</em></h4>
+<h4 class="date"><em>2019-02-15</em></h4>
 
 
 
@@ -42,8 +42,8 @@
 <p>Pre-function data cleaning:</p>
 <ul>
 <li>Import your data</li>
-<li>Clean appropriately (for binary variables, give 0-1 values as results will show the summary values of level 1 only)</li>
-<li>Create vectors of names for numeric variables, binary variables, multiple level categorical variables, and two vectors corresponding to subgroups of interest and the type of mean you wish to calculate for each subgroup</li>
+<li>Clean appropriately. Note that for binary variables, you should recode your levels to 0-1 values as results will show the summary values of level 1 only. (Follow standard naming convention, where ‘YES’ = 1 and ‘NO’ = 0)</li>
+<li>Create vectors of names for numeric variables, binary variables, multiple level categorical variables, and vectors corresponding to subgroups of interest for which you would like to calculate the mean or counts of another variable (see below)</li>
 <li>Make all categorical variables factors (this includes binary, multiple level categorical and subgroups)</li>
 <li>Finally, create a vector containing the order of variables as you wish them to be displayed in your final table</li>
 </ul>
@@ -58,26 +58,33 @@
 <h2>The function <code>make_table_one</code></h2>
 <div id="usage" class="section level3">
 <h3>Usage</h3>
-<pre><code>make_table_one(df, grouping_var, num_vars = NULL,
-  binary_cat_vars = NULL, multiple_cat_vars = NULL, display = c(&quot;CP&quot;,&quot;C&quot;, &quot;P&quot;), subgroups = NULL,
-  mean_vars_for_subgroups = NULL, order_of_vars = NULL, export_rtf = FALSE, rtf_filename = NULL,
-  digits = 2)</code></pre>
+<pre><code>make_table_one(df, grouping_var, num_vars = NULL, num_display = &quot;PM&quot;,
+  binary_cat_vars = NULL, multiple_cat_vars = NULL, cat_display = &quot;CP&quot;, 
+  subgroups_m = NULL, mean_vars_for_subgroups = NULL, 
+  subgroups_c = NULL, count_vars_for_subgroups = NULL, 
+  order_of_vars = NULL, 
+  export_rtf = FALSE, rtf_filename = NULL,
+  show_pval = TRUE, digits = 2)</code></pre>
 </div>
 <div id="parameters" class="section level3">
 <h3>Parameters</h3>
 <ul>
 <li><code>df</code>: Dataset containing covariates</li>
-<li><code>grouping_var</code>: Variable to group by (will be columns of table)</li>
+<li><code>grouping_var</code>: Variable to group by (will be columns of table). Must be included (ie. one column summary tables currently not allowed).</li>
 <li><code>num_vars</code>: Vector of numeric variables</li>
+<li><code>num_display</code>: How should numeric variable results be displayed? (<code>'PM'</code> for mean +- sd, <code>'PRS'</code> for mean (sd), defaults to <code>'PM'</code>)</li>
 <li><code>binary_cat_vars</code>: Vector of binary variables (in 0-1 format)</li>
 <li><code>multiple_cat_vars</code>: Vector of multiple level categorical variables</li>
-<li><code>display</code>: How to display categorical results: ‘CP’ = counts and proportions, ‘C’ = counts, ‘P’ = proportions (defaults to ‘CP’)</li>
-<li><code>subgroups</code>: Vector of subgroup variables of interest (must be factors). NOTE: If you plan to analyze a categorical variable by itself and then also use it for subgroup analysis, it is advised to copy and rename the columns of the categorical variables you wish to use as subgroups (ie. rename variable to something like ’variable_sub“) so Table One can be properly sorted to reflect your specification in ‘order_of_vars’. If the subgroup does not have a unique name, it will be sorted directly below the categorical variable.</li>
-<li><code>mean_vars_for_subgroups</code>: Vector of numeric variables from which to calculate mean and sd (must match vector position of corresponding subgroup variable)</li>
+<li><code>cat_display</code>: How should categorical results be displayed? (<code>'CP'</code> = counts and proportions, <code>'C'</code> = counts, <code>'P'</code> = proportions, defaults to <code>'CP'</code>)</li>
+<li><code>subgroups_m</code>: Vector of subgroup variables (must be factors) of interest for calculating means of a numeric variable. NOTE: If you plan to analyze a categorical variable by itself and then also use it for subgroup analysis, it is advised to copy and rename the columns of the categorical variables you wish to use as subgroups (ie. rename variable to something like ’variable_sub_m“) so Table One can be properly sorted to reflect your specification in ‘order_of_vars’. If the subgroup does not have a unique name, it will be sorted directly below the categorical variable.</li>
+<li><code>mean_vars_for_subgroups</code>: Vector of numeric variables from which to calculate mean and sd (must match vector position of corresponding <code>subgroups_m</code> variable)</li>
+<li><code>subgroups_c</code>: Vector of subgroup variables (must be factors) of interest for calculating counts of a BINARY variable. NOTE: Follow same naming convention of subgroups as that listed in <code>subgroups_m</code>.</li>
+<li><code>count_vars_for_subgroups</code>: Vector of BINARY variables from which to calculate mean and sd (must match vector position of corresponding <code>subgroups_c</code> variable.) Results are displayed for the case where the binary count variable is equal to 1.</li>
 <li><code>order_of_vars</code>: A vector of all variables listed in the order of the rows you desire for your Table One.</li>
-<li><code>export_rtf</code>: Logical. Do you want to export an RTF to location specified in ‘rtf_filename’? (Defaults to <code>FALSE</code>)</li>
+<li><code>export_rtf</code>: Logical. Do you want to export an RTF to location specified in <code>'rtf_filename'</code>? (Defaults to <code>FALSE</code>)</li>
 <li><code>rtf_filename</code>: Must be quoted and include ‘.rtf’ extension</li>
-<li><code>digits</code>: Number of digits to round decimals</li>
+<li><code>show_pval</code>: Logical. Should the p-value results be displayed? Defaults to <code>TRUE</code>.</li>
+<li><code>digits</code>: Number of digits to round decimals. Defaults to <code>2</code>.</li>
 </ul>
 </div>
 </div>
@@ -97,32 +104,40 @@ my_cleaned_baseline &lt;- baseline %&gt;%
 binary_cat_vars &lt;- c('bin_var1', 'bin_var2', ...)
 multiple_cat_vars &lt;- c('mc_var1', 'mc_var2', ...)
 
-subgroups &lt;- c('subgroup1', subgroup2', ...)
-mean_vars &lt;- c('calulate_mean_of_this_for_subgroup1', 'calulate_mean_of_this_for_subgroup2', ...)</code></pre>
-<p>Convert your categorical variables into factors (very important):</p>
+subgroups_m &lt;- c('subgroup_m_1', subgroup_m_2', ...)
+mean_vars &lt;- c('calulate_mean_of_this_for_subgroup_m_1', 'calulate_mean_of_this_for_subgroup_m_2', ...)
+
+subgroups_c &lt;- c('subgroup_c_1', subgroup_c_2', ...)
+count_vars &lt;- c('calulate_count_of_this_for_subgroup_c_1', 'calulate_count_of_this_for_subgroup_c_2', ...))</code></pre>
+<p>Convert your categorical variables into factors (VERY IMPORTANT):</p>
 <pre><code>my_cleaned_baseline[binary_cat_vars] &lt;- lapply(my_cleaned_baseline[binary_cat_vars], factor)
 my_cleaned_baseline[multiple_cat_vars] &lt;- lapply(my_cleaned_baseline[multiple_cat_vars], factor)
-my_cleaned_baseline[subgroups] &lt;- lapply(my_cleaned_baseline[subgroups], factor)</code></pre>
+my_cleaned_baseline[subgroups_m] &lt;- lapply(my_cleaned_baseline[subgroups_m], factor)
+my_cleaned_baseline[subgroups_c] &lt;- lapply(my_cleaned_baseline[subgroups_c], factor)</code></pre>
 <p>Create a vector containing the order of variables as you wish them to be displayed in your final table:</p>
 <pre><code>var_order &lt;- c('var_for_first_row', 'var_for_second_row', ...)</code></pre>
 </div>
 <div id="calling-make_table_one" class="section level2">
 <h2>Calling <code>make_table_one</code></h2>
 <p>Once you have your data cleaned and vectors of variable names as above, substitute into <code>make_table_one</code> and save as an object for viewing within R.</p>
-<pre><code>table_1 &lt;- make_table_one(df = my_cleaned_baseline, grouping_var = random_assignment_group, num_vars = num_vars,
-  binary_cat_vars = binary_cat_vars, multiple_cat_vars = multiple_cat_vars, display = 'CP',
-  subgroups = subgroups, mean_vars_for_subgroups = mean_vars, order_of_vars = var_order,
-  export_rtf = TRUE, rtf_filename = 'my_location/my_filename.rtf', digits = 2)</code></pre>
+<pre><code>table_1 &lt;- make_table_one(df = my_cleaned_baseline, grouping_var = random_assignment_group, 
+  num_vars = num_vars, num_display = 'PM', 
+  binary_cat_vars = binary_cat_vars, multiple_cat_vars = multiple_cat_vars, cat_display = 'CP',
+  subgroups_m = subgroups_m, mean_vars_for_subgroups = mean_vars, 
+  subgroups_c = subgroups_c, count_vars_for_subgroups = count_vars,
+  order_of_vars = var_order,
+  export_rtf = TRUE, rtf_filename = 'my_location/my_filename.rtf', 
+  show_pval = TRUE, digits = 2)</code></pre>
 <p>Notice that <code>export_rtf = TRUE</code> so an RTF will be generated at the location specified in <code>rtf_filename = 'my_location/my_filename.rtf'</code>.</p>
 </div>
 <div id="future-work" class="section level2">
 <h2>Future Work</h2>
 <p>In the future, I hope to add the following:</p>
 <ul>
-<li>More error handling to deal with common type issues</li>
-<li>A simulated baseline dataset to play with in the package and to display real examples in the vignette</li>
-<li>Count and proportion calculations for subgroups (currently only supports mean/sd calculation)</li>
-<li>Anything else you think might be convenient to have (email me!)</li>
+<li>More error handling to deal with common type and value issues</li>
+<li>A simulated baseline dataset to play with in the package</li>
+<li>A full tutorial with the simulated dataset walking through each step</li>
+<li>Any other functionality you think might be convenient to have (email me!)</li>
 </ul>
 </div>
 <div id="thanks-for-using-make_table_one" class="section level2">
