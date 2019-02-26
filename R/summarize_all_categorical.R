@@ -39,7 +39,7 @@ summarize_all_categorical <- function(df, binary_cat_vars, multiple_cat_vars, gr
 
 
   multiple <- purrr::map_dfr(syms(multiple_cat_vars), quantify_categorical, df = df,
-                      grouping_var = !!grouping_var, show_pval = show_pval,
+                      grouping_var = !!grouping_var,
                       type = 'multiple', display = display, show_pval = show_pval, digits = digits)
 
   res <- rbind(binary, multiple)
