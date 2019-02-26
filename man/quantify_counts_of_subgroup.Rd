@@ -5,7 +5,7 @@
 \title{Quantify Counts of Subgroup}
 \usage{
 quantify_counts_of_subgroup(subgroup_c, count_var, df, grouping_var,
-  count_display = "CP", show_pval = FALSE, digits = 1)
+  count_display = "CP", show_pval = TRUE, digits = 1)
 }
 \arguments{
 \item{subgroup_c}{Subgroup variable of interest (must be factor)}

@@ -27,7 +27,7 @@
 #'
 
 quantify_counts_of_subgroup <- function(subgroup_c, count_var, df, grouping_var, count_display = 'CP',
-                                        show_pval = FALSE, digits = 1){
+                                        show_pval = TRUE, digits = 1){
 
   grouping_var <- dplyr::enquo(grouping_var)
   subgroup_c <- dplyr::enquo(subgroup_c)
